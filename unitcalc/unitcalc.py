@@ -50,22 +50,20 @@ def unitcalc(fromq, toq, verbose):
         found_unit = find_unit(dir(ureg), unit)
         fromq_target = ureg.parse_units(found_unit)
 
-    try:
-        fromq_parsed = magnitude * fromq_target
-    except UndefinedUnitError as e:
-        eprint("UndefinedUnitError:", e)
-        for unitname in dir(ureg):
-            if unit in unitname:
-                print('\t' + unitname)
-            print("\n\n\n")
-            print(dir(ureg))
-        quit(1)
+    fromq_parsed = magnitude * fromq_target
 
     if verbose:
         eprint("toq:", toq)
 
-    toq_parsed = ureg.parse_units(toq)
-    fromq_converted = fromq_parsed.to(toq_parsed)
+    try:
+        toq_target = ureg.parse_units(toq)
+    except UndefinedUnitError as e:
+        eprint("UndefinedUnitError:", e)
+        found_unit = find_unit(dir(ureg), toq)
+        toq_target = ureg.parse_units(found_unit)
+
+    fromq_converted = fromq_parsed.to(toq_target)
+
 
     if verbose:
         eprint("to unit:", toq)

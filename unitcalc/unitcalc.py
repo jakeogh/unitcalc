@@ -11,8 +11,7 @@ ureg = UnitRegistry()
 Q_ = ureg.Quantity
 
 
-
-def find_unit(ulist, in_unit):
+def find_unit(ulist, in_unit, verbose):
     distance = -1
     for unit in ulist:
         dist = StringMatcher.distance(in_unit, unit)
@@ -23,9 +22,8 @@ def find_unit(ulist, in_unit):
             if dist < distance:
                 distance = dist
                 winning_unit = unit
-    eprint("Converting {0} to {1}".format(in_unit, winning_unit))
+    if verbose: eprint("Converting {0} to {1}".format(in_unit, winning_unit))
     return winning_unit
-
 
 
 @click.command()
@@ -48,35 +46,26 @@ def unitcalc(fromq, toq, verbose):
     if verbose:
         eprint("from magnitude:", magnitude)
         eprint("from unit:", unit)
+        eprint("to unit:", toq)
 
     try:
         fromq_target = ureg.parse_units(unit)
     except UndefinedUnitError as e:
-        eprint("UndefinedUnitError:", e)
-        found_unit = find_unit(dir(ureg), unit)
+        if verbose: eprint("UndefinedUnitError:", e)
+        found_unit = find_unit(dir(ureg), unit, verbose)
         fromq_target = ureg.parse_units(found_unit)
 
     Q_ = ureg.Quantity
     fromq_parsed = Q_(magnitude, fromq_target)
-    #try:
-    #    fromq_parsed = magnitude * fromq_target
-    #except pint.errors.OffsetUnitCalculusError:
-
-
 
     try:
         toq_target = ureg.parse_units(toq)
     except UndefinedUnitError as e:
-        eprint("UndefinedUnitError:", e)
-        found_unit = find_unit(dir(ureg), toq)
+        if verbose: eprint("UndefinedUnitError:", e)
+        found_unit = find_unit(dir(ureg), toq, verbose)
         toq_target = ureg.parse_units(found_unit)
 
     fromq_converted = fromq_parsed.to(toq_target)
-
-
-    if verbose:
-        eprint("to unit:", toq)
-
     print(fromq_converted)
 
 

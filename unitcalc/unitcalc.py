@@ -34,7 +34,9 @@ def unitcalc(fromq, toq, verbose):
         eprint("UndefinedUnitError:", e)
         for unitname in dir(ureg):
             if unit in unitname:
-                print('\t'+unitname)
+                print('\t' + unitname)
+            print("\n\n\n")
+            print(dir(urge))
         quit(1)
 
     if verbose:

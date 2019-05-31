@@ -37,11 +37,16 @@ def unitcalc(fromq, toq, verbose):
     for index, letter in enumerate(fromq):
         if letter.isalpha():
             break
+
+    if verbose:
+        eprint("from:", fromq)
+        eprint("to:", toq)
+
     magnitude = float(fromq[:index])
     unit = fromq[index:]
     if verbose:
-        eprint("magnitude:", magnitude)
-        eprint("unit:", unit)
+        eprint("from magnitude:", magnitude)
+        eprint("from unit:", unit)
 
     try:
         fromq_target = ureg.parse_units(unit)
@@ -50,10 +55,13 @@ def unitcalc(fromq, toq, verbose):
         found_unit = find_unit(dir(ureg), unit)
         fromq_target = ureg.parse_units(found_unit)
 
-    fromq_parsed = magnitude * fromq_target
+    Q_ = ureg.Quantity
+    fromq_parsed = Q_(magnitude, fromq_target)
+    #try:
+    #    fromq_parsed = magnitude * fromq_target
+    #except pint.errors.OffsetUnitCalculusError:
 
-    if verbose:
-        eprint("toq:", toq)
+
 
     try:
         toq_target = ureg.parse_units(toq)

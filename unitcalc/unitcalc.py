@@ -23,6 +23,7 @@ def find_unit(ulist, in_unit):
             if dist < distance:
                 distance = dist
                 winning_unit = unit
+    eprint("Converting {0} to {1}".format(in_unit, winning_unit))
     return winning_unit
 
 

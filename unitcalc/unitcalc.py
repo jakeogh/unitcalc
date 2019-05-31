@@ -36,7 +36,7 @@ def unitcalc(fromq, toq, verbose):
             if unit in unitname:
                 print('\t' + unitname)
             print("\n\n\n")
-            print(dir(urge))
+            print(dir(ureg))
         quit(1)
 
     if verbose:

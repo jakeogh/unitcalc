@@ -1,14 +1,31 @@
 #!/usr/bin/env python3
 # -*- coding: utf8 -*-
 
-import os
 import click
 from pint import UnitRegistry
 from pint.errors import UndefinedUnitError
 from kcl.printops import eprint
+from Levenshtein import StringMatcher
 
 ureg = UnitRegistry()
 Q_ = ureg.Quantity
+
+
+
+def find_unit(ulist, in_unit):
+    distance = -1
+    for unit in ulist:
+        dist = StringMatcher.distance(in_unit, unit)
+        if distance < 0:
+            distance = dist
+            winning_unit = unit
+        else:
+            if dist < distance:
+                distance = dist
+                winning_unit = unit
+    return winning_unit
+
+
 
 @click.command()
 @click.argument('fromq')
@@ -26,9 +43,14 @@ def unitcalc(fromq, toq, verbose):
         eprint("magnitude:", magnitude)
         eprint("unit:", unit)
 
-
     try:
         fromq_target = ureg.parse_units(unit)
+    except UndefinedUnitError as e:
+        eprint("UndefinedUnitError:", e)
+        found_unit = find_unit(dir(ureg), unit)
+        fromq_target = ureg.parse_units(found_unit)
+
+    try:
         fromq_parsed = magnitude * fromq_target
     except UndefinedUnitError as e:
         eprint("UndefinedUnitError:", e)

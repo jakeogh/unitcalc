@@ -34,14 +34,15 @@ def unitcalc(fromq, toq, verbose):
     assert fromq[0].isdigit()
     assert not toq[0].isdigit()
     for index, letter in enumerate(fromq):
-        if letter.isalpha():
+        if letter.isalpha():  # ",".isalpha() == False (and .)
             break
 
     if verbose:
         eprint("from:", fromq)
         eprint("to:", toq)
 
-    magnitude = float(fromq[:index])
+    magnitude = fromq[:index].replace(',', '')
+    magnitude = float(magnitude)
     unit = fromq[index:]
     if verbose:
         eprint("from magnitude:", magnitude)

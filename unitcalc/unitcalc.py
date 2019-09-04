@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf8 -*-
 
+from icecream import ic
 import click
 from pint import UnitRegistry
 from pint.errors import UndefinedUnitError
@@ -38,21 +39,21 @@ def unitcalc(fromq, toq, verbose):
             break
 
     if verbose:
-        eprint("from:", fromq)
-        eprint("to:", toq)
+        ic(fromq)
+        ic(toq)
 
     magnitude = fromq[:index].replace(',', '')
     magnitude = float(magnitude)
     unit = fromq[index:]
     if verbose:
-        eprint("from magnitude:", magnitude)
-        eprint("from unit:", unit)
-        eprint("to unit:", toq)
+        ic(magnitude)
+        ic(unit)
+        ic(toq)
 
     try:
         fromq_target = ureg.parse_units(unit)
     except UndefinedUnitError as e:
-        if verbose: eprint("UndefinedUnitError:", e)
+        if verbose: ic("UndefinedUnitError:", e)
         found_unit = find_unit(dir(ureg), unit, verbose)
         fromq_target = ureg.parse_units(found_unit)
 
@@ -62,7 +63,7 @@ def unitcalc(fromq, toq, verbose):
     try:
         toq_target = ureg.parse_units(toq)
     except UndefinedUnitError as e:
-        if verbose: eprint("UndefinedUnitError:", e)
+        if verbose: ic("UndefinedUnitError:", e)
         found_unit = find_unit(dir(ureg), toq, verbose)
         toq_target = ureg.parse_units(found_unit)
 

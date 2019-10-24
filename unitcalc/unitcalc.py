@@ -27,11 +27,25 @@ def find_unit(ulist, in_unit, verbose):
     return winning_unit
 
 
-@click.command()
-@click.argument('fromq')
-@click.argument('toq')
+@click.group()
+def cli():
+    pass
+
+
+@cli.command()
 @click.option('--verbose', is_flag=True)
-def unitcalc(fromq, toq, verbose):
+def shell(verbose):
+    ic(dir(ureg))
+    import IPython
+    IPython.embed()
+
+
+@cli.command()
+@click.argument('fromq', required=False)
+@click.argument('toq', required=False)
+@click.option('--shell', is_flag=True)
+@click.option('--verbose', is_flag=True)
+def convert(fromq, toq, shell, verbose):
     assert fromq[0].isdigit()
     assert not toq[0].isdigit()
     for index, letter in enumerate(fromq):
@@ -72,4 +86,4 @@ def unitcalc(fromq, toq, verbose):
 
 
 if __name__ == '__main__':
-    unitcalc()
+    cli()

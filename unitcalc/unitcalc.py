@@ -58,8 +58,8 @@ def convert(fromq, toq, shell, verbose):
 
     magnitude = fromq[:index].replace(',', '')
     magnitude = float(magnitude)
-    if verbose: ic(magnitude)
     unit = fromq[index:]
+
     if verbose:
         ic(magnitude)
         ic(unit)
@@ -74,6 +74,8 @@ def convert(fromq, toq, shell, verbose):
 
     Q_ = ureg.Quantity
     fromq_parsed = Q_(magnitude, fromq_target)
+    if verbose:
+        ic(fromq_parsed)
 
     try:
         toq_target = ureg.parse_units(toq)

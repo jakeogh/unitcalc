@@ -86,6 +86,9 @@ def convert(fromq, toq, shell, verbose):
         found_unit = find_unit(dir(ureg), toq, verbose)
         toq_target = ureg.parse_units(found_unit)
 
+    if verbose:
+        ic(toq_target)
+
     fromq_converted = fromq_parsed.to(toq_target)
     print(fromq_converted)
 

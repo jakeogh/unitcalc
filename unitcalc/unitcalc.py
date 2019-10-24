@@ -52,6 +52,7 @@ def convert(fromq, toq, shell, verbose):
         if letter.isalpha():  # ",".isalpha() == False (and .)
             break
 
+    ic()
     if verbose:
         ic(fromq)
         ic(toq)
@@ -74,6 +75,7 @@ def convert(fromq, toq, shell, verbose):
 
     Q_ = ureg.Quantity
     fromq_parsed = Q_(magnitude, fromq_target)
+
     if verbose:
         ic(fromq_parsed)
 

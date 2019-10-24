@@ -58,6 +58,7 @@ def convert(fromq, toq, shell, verbose):
 
     magnitude = fromq[:index].replace(',', '')
     magnitude = float(magnitude)
+    if verbose: ic(magnitude)
     unit = fromq[index:]
     if verbose:
         ic(magnitude)

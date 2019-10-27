@@ -27,7 +27,7 @@ def find_unit(ulist, in_unit, verbose):
     return winning_unit
 
 
-def topint(fromq, verbose):
+def topint(fromq, verbose=False):
     assert fromq[0].isdigit()
     for index, letter in enumerate(fromq):
         if letter.isalpha():  # ",".isalpha() == False (and .)

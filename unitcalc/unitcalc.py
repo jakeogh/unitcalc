@@ -27,6 +27,40 @@ def find_unit(ulist, in_unit, verbose):
     return winning_unit
 
 
+def topint(fromq, verbose):
+    assert fromq[0].isdigit()
+    for index, letter in enumerate(fromq):
+        if letter.isalpha():  # ",".isalpha() == False (and .)
+            break
+
+    if verbose:
+        ic(fromq)
+
+    magnitude = fromq[:index].replace(',', '')
+    magnitude = float(magnitude)
+    unit = fromq[index:]
+
+    if verbose:
+        ic(magnitude)
+        ic(unit)
+
+    try:
+        fromq_target = ureg.parse_units(unit)
+    except UndefinedUnitError as e:
+        if verbose: ic("UndefinedUnitError:", e)
+        found_unit = find_unit(dir(ureg), unit, verbose)
+        fromq_target = ureg.parse_units(found_unit)
+
+    Q_ = ureg.Quantity
+    fromq_parsed = Q_(magnitude, fromq_target)
+
+    if verbose:
+        ic(fromq_parsed)
+
+    return fromq_parsed
+
+
+
 @click.group()
 def cli():
     pass
@@ -46,38 +80,40 @@ def shell(verbose):
 @click.option('--shell', is_flag=True)
 @click.option('--verbose', is_flag=True)
 def convert(fromq, toq, shell, verbose):
-    assert fromq[0].isdigit()
+
+    #assert fromq[0].isdigit()
     assert not toq[0].isdigit()
-    for index, letter in enumerate(fromq):
-        if letter.isalpha():  # ",".isalpha() == False (and .)
-            break
+    #for index, letter in enumerate(fromq):
+    #    if letter.isalpha():  # ",".isalpha() == False (and .)
+    #        break
 
-    ic()
+    fromq_parsed = topint(fromq, verbose=verbose)
+
+    #ic()
     if verbose:
-        ic(fromq)
+        #ic(fromq)
         ic(toq)
 
-    magnitude = fromq[:index].replace(',', '')
-    magnitude = float(magnitude)
-    unit = fromq[index:]
+    #magnitude = fromq[:index].replace(',', '')
+    #magnitude = float(magnitude)
+    #unit = fromq[index:]
 
-    if verbose:
-        ic(magnitude)
-        ic(unit)
-        ic(toq)
+    #if verbose:
+    #    ic(magnitude)
+    #    ic(unit)
 
-    try:
-        fromq_target = ureg.parse_units(unit)
-    except UndefinedUnitError as e:
-        if verbose: ic("UndefinedUnitError:", e)
-        found_unit = find_unit(dir(ureg), unit, verbose)
-        fromq_target = ureg.parse_units(found_unit)
+    #try:
+    #    fromq_target = ureg.parse_units(unit)
+    #except UndefinedUnitError as e:
+    #    if verbose: ic("UndefinedUnitError:", e)
+    #    found_unit = find_unit(dir(ureg), unit, verbose)
+    #    fromq_target = ureg.parse_units(found_unit)
 
-    Q_ = ureg.Quantity
-    fromq_parsed = Q_(magnitude, fromq_target)
+    #Q_ = ureg.Quantity
+    #fromq_parsed = Q_(magnitude, fromq_target)
 
-    if verbose:
-        ic(fromq_parsed)
+    #if verbose:
+    #    ic(fromq_parsed)
 
     try:
         toq_target = ureg.parse_units(toq)

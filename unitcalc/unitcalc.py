@@ -73,11 +73,10 @@ def topint(fromq, ureg, verbose=False):
 
 
 @click.command()
-@click.argument('fromq', required=False)
-@click.argument('toq', required=False)
-@click.option('--shell', is_flag=True)
+@click.argument('fromq', required=True)
+@click.argument('toq', required=True)
 @click.option('--verbose', is_flag=True)
-def cli(fromq, toq, shell, verbose):
+def cli(fromq, toq, verbose):
 
     ureg = UnitRegistry(system='mks')
     #Q_ = ureg.Quantity

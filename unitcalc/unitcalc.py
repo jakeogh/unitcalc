@@ -61,25 +61,25 @@ def topint(fromq, verbose):
 
 
 
-@click.group()
-def cli():
-    pass
+#@click.group()
+#def cli():
+#    pass
+#
+#
+#@cli.command()
+#@click.option('--verbose', is_flag=True)
+#def shell(verbose):
+#    ic(dir(ureg))
+#    import IPython
+#    IPython.embed()
 
 
-@cli.command()
-@click.option('--verbose', is_flag=True)
-def shell(verbose):
-    ic(dir(ureg))
-    import IPython
-    IPython.embed()
-
-
-@cli.command()
+@click.command()
 @click.argument('fromq', required=False)
 @click.argument('toq', required=False)
 @click.option('--shell', is_flag=True)
 @click.option('--verbose', is_flag=True)
-def convert(fromq, toq, shell, verbose):
+def cli(fromq, toq, shell, verbose):
 
     #assert fromq[0].isdigit()
     assert not toq[0].isdigit()

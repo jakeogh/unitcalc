@@ -34,7 +34,8 @@ def topint(fromq, ureg, verbose=False):
     if verbose:
         ic(fromq)
 
-    ic(magnitude)
+    ic(fromq)
+    ic(index)
     magnitude = fromq[:index].replace(',', '')
     eprint(magnitude)
     magnitude = float(magnitude)

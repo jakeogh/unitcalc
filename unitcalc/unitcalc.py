@@ -34,10 +34,11 @@ def topint(fromq, ureg, verbose=False):
     if verbose:
         ic(fromq)
 
-    ic(fromq)
-    ic(index)
-    magnitude = fromq[:index].replace(',', '')
-    eprint(magnitude)
+    #ic(fromq)
+    #ic(index)
+    if index:
+        magnitude = fromq[:index].replace(',', '')
+    #eprint(magnitude)
     magnitude = float(magnitude)
     unit = fromq[index:]
 

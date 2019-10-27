@@ -8,8 +8,6 @@ from pint.errors import UndefinedUnitError
 from kcl.printops import eprint
 from Levenshtein import StringMatcher
 
-ureg = UnitRegistry()
-Q_ = ureg.Quantity
 
 
 def find_unit(ulist, in_unit, verbose):
@@ -27,7 +25,7 @@ def find_unit(ulist, in_unit, verbose):
     return winning_unit
 
 
-def topint(fromq, verbose=False):
+def topint(fromq, ureg, verbose=False):
     assert fromq[0].isdigit()
     for index, letter in enumerate(fromq):
         if letter.isalpha():  # ",".isalpha() == False (and .)
@@ -81,13 +79,15 @@ def topint(fromq, verbose=False):
 @click.option('--verbose', is_flag=True)
 def cli(fromq, toq, shell, verbose):
 
+    ureg = UnitRegistry(system='mks')
+    #Q_ = ureg.Quantity
     #assert fromq[0].isdigit()
     assert not toq[0].isdigit()
     #for index, letter in enumerate(fromq):
     #    if letter.isalpha():  # ",".isalpha() == False (and .)
     #        break
 
-    fromq_parsed = topint(fromq, verbose=verbose)
+    fromq_parsed = topint(fromq, ureg, verbose=verbose)
 
     #ic()
     if verbose:

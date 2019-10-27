@@ -35,6 +35,7 @@ def topint(fromq, ureg, verbose=False):
         ic(fromq)
 
     magnitude = fromq[:index].replace(',', '')
+    eprint(magnitude)
     magnitude = float(magnitude)
     unit = fromq[index:]
 

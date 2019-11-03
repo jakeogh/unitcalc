@@ -131,6 +131,8 @@ def cli(fromq, toq, verbose):
         ic(toq_target)
 
     fromq_converted = fromq_parsed.to(toq_target)
+    if verbose:
+        ic(int(fromq_converted))
     print(fromq_converted)
 
 

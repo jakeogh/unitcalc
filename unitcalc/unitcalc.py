@@ -133,6 +133,7 @@ def cli(fromq, toq, verbose):
     fromq_converted = fromq_parsed.to(toq_target)
     if verbose:
         ic(int(fromq_converted))
+        ic(fromq_converted.magnitude)
     print(fromq_converted)
 
 

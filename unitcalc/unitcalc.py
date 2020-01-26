@@ -10,7 +10,7 @@ from Levenshtein import StringMatcher
 
 
 def eprint(*args, **kwargs):
-    **kwargs.pop('file', None)
+    kwargs.pop('file', None)
     print(*args, **kwargs, file=sys.stderr)
 
 

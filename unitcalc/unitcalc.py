@@ -10,10 +10,7 @@ from Levenshtein import StringMatcher
 
 
 def eprint(*args, **kwargs):
-    if 'end' in kwargs.keys():
-        print(*args, file=sys.stderr, **kwargs)
-    else:
-        print(*args, **kwargs, end=sys.stderr)
+    print(*args, **kwargs, file=sys.stderr)
 
 
 def find_unit(ulist, in_unit, verbose):

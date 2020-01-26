@@ -27,6 +27,7 @@ def find_unit(ulist, in_unit, verbose):
                 winning_unit = unit
     if verbose:
         eprint("Converting {0} to {1}".format(in_unit, winning_unit))
+
     return winning_unit
 
 
@@ -87,7 +88,9 @@ def cli(fromq, toq, verbose):
     try:
         toq_target = ureg.parse_units(toq)
     except UndefinedUnitError as e:
-        if verbose: ic("UndefinedUnitError:", e)
+        if verbose:
+            ic("UndefinedUnitError:", e)
+
         found_unit = find_unit(dir(ureg), toq, verbose)
         toq_target = ureg.parse_units(found_unit)
 
@@ -98,6 +101,7 @@ def cli(fromq, toq, verbose):
     if verbose:
         ic(int(fromq_converted))
         ic(fromq_converted.magnitude)
+
     print(fromq_converted)
 
 

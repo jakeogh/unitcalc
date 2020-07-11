@@ -47,7 +47,11 @@ def find_unit(ulist, in_unit, verbose):
 
 
 def topint(fromq, ureg, verbose=False):
-    assert fromq[0].isdigit()
+
+    if not fromq[0].isdigit():
+        assert fromq[0] == '.'
+        fromq = '0' + fromq
+
     for index, letter in enumerate(fromq):
         if letter.isalpha():  # ",".isalpha() == False (and .)
             break

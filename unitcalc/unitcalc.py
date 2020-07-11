@@ -69,6 +69,8 @@ def topint(fromq, ureg, verbose=False):
         except ValueError:
             assert '/' in magnitude
             num, denom = magnitude.split('/')
+            num = float(num)
+            denom = float(denom)
             magnitude = float(num / denom)
     else:
         magnitude = fromq

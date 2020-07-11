@@ -64,7 +64,12 @@ def topint(fromq, ureg, verbose=False):
     if index:
         magnitude = fromq[:index].replace(',', '')
         #ic(magnitude)
-        magnitude = float(magnitude)
+        try:
+            magnitude = float(magnitude)
+        except ValueError:
+            assert '/' in magnitude
+            num, denom = magnitude.split('/')
+            magnitude = float(num / denom)
     else:
         magnitude = fromq
     unit = fromq[index:]

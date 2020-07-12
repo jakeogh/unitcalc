@@ -53,9 +53,14 @@ def topint(fromq, ureg, verbose=False):
         assert fromq[0] == '.'
         fromq = '0' + fromq
 
+    # find the end of the magnitude
     for index, letter in enumerate(fromq):
         if letter.isalpha():  # ",".isalpha() == False (and .)
-            break
+            if letter == 'e':
+                if not fromq[index + 1].isdigit():
+                    break
+            else:
+                break
 
     if verbose:
         ic(fromq)

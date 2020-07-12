@@ -125,7 +125,7 @@ def cli(fromq, toq, verbose):
     ureg = UnitRegistry(system='mks')
     assert not toq[0].isdigit()
 
-    fromq_parsed = topint(fromq, ureg, verbose=verbose)
+    fromq_parsed = topint(fromq=fromq, urge=ureg, verbose=verbose)
 
     if verbose:
         #ic(fromq)
@@ -137,7 +137,7 @@ def cli(fromq, toq, verbose):
         if verbose:
             ic("UndefinedUnitError:", e)
 
-        found_unit = find_unit(dir(ureg), toq, verbose)
+        found_unit = find_unit(ulist=dir(ureg), in_unit=toq, verbose=verbose)
         toq_target = ureg.parse_units(found_unit)
 
     if verbose:
@@ -149,7 +149,3 @@ def cli(fromq, toq, verbose):
         ic(fromq_converted.magnitude)
 
     print(fromq_converted)
-
-
-if __name__ == '__main__':
-    cli()

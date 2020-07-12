@@ -16,6 +16,7 @@
 # pylint: disable=E1101     # no member for base
 # pylint: disable=W0201     # attribute defined outside __init__
 
+import re
 import sys
 from icecream import ic
 import click
@@ -67,11 +68,17 @@ def topint(fromq, ureg, verbose=False):
         try:
             magnitude = float(magnitude)
         except ValueError:
-            assert '/' in magnitude
-            num, denom = magnitude.split('/')
-            num = float(num)
-            denom = float(denom)
-            magnitude = float(num / denom)
+            expression_pattern = re.compile("[0-9/\*e.+-]")
+            for item in magnitude:
+                assert expression_pattern.match(item)
+
+            magnitude = eval(magnitude)
+
+            #assert '/' in magnitude
+            #num, denom = magnitude.split('/')
+            #num = float(num)
+            #denom = float(denom)
+            #magnitude = float(num / denom)
     else:
         magnitude = fromq
     unit = fromq[index:]

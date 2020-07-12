@@ -68,7 +68,7 @@ def topint(fromq, ureg, verbose=False):
         try:
             magnitude = float(magnitude)
         except ValueError:
-            expression_pattern = re.compile("[0-9/\*e.+-()]")
+            expression_pattern = re.compile("[0-9/\*e.+\-()]")
             for item in magnitude:
                 assert expression_pattern.match(item)
 

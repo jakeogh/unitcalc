@@ -125,7 +125,7 @@ def cli(fromq, toq, verbose):
     ureg = UnitRegistry(system='mks')
     assert not toq[0].isdigit()
 
-    fromq_parsed = topint(fromq=fromq, urge=ureg, verbose=verbose)
+    fromq_parsed = topint(fromq=fromq, ureg=ureg, verbose=verbose)
 
     if verbose:
         #ic(fromq)

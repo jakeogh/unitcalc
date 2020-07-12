@@ -30,7 +30,7 @@ def eprint(*args, **kwargs):
     print(*args, **kwargs, file=sys.stderr)
 
 
-def find_unit(ulist, in_unit, verbose):
+def find_unit(*, ulist, in_unit, verbose=False):
     distance = -1
     for unit in ulist:
         dist = StringMatcher.distance(in_unit, unit)
@@ -47,7 +47,7 @@ def find_unit(ulist, in_unit, verbose):
     return winning_unit
 
 
-def topint(fromq, ureg, verbose=False):
+def topint(*, fromq, ureg, verbose=False):
 
     if not fromq[0].isdigit():
         assert fromq[0] == '.'
@@ -100,8 +100,11 @@ def topint(fromq, ureg, verbose=False):
     try:
         fromq_target = ureg.parse_units(unit)
     except UndefinedUnitError as e:
-        if verbose: ic("UndefinedUnitError:", e)
-        found_unit = find_unit(dir(ureg), unit, verbose)
+        if verbose:
+            ic(e)
+        found_unit = find_unit(ulist=dir(ureg), in_unit=unit, verbose=verbose)
+        if verbose:
+            ic(found_unit)
         fromq_target = ureg.parse_units(found_unit)
 
     Q_ = ureg.Quantity

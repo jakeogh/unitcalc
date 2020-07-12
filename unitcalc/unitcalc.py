@@ -68,9 +68,14 @@ def topint(fromq, ureg, verbose=False):
         try:
             magnitude = float(magnitude)
         except ValueError:
+            # should use https://github.com/sopel-irc/sopel/blob/master/sopel/tools/calculation.py
+            # or sage
             expression_pattern = re.compile("[0-9/\*e.+\-()]")
             for item in magnitude:
                 assert expression_pattern.match(item)
+
+            if verbose:
+                ic(magnitude)
 
             magnitude = float(eval(magnitude))
 

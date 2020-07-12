@@ -65,11 +65,8 @@ def topint(*, fromq, ureg, verbose=False):
     if verbose:
         ic(fromq)
 
-    #ic(fromq)
-    #ic(index)
     if index:
         magnitude = fromq[:index].replace(',', '')
-        #ic(magnitude)
         try:
             magnitude = float(magnitude)
         except ValueError:
@@ -84,11 +81,6 @@ def topint(*, fromq, ureg, verbose=False):
 
             magnitude = float(eval(magnitude))
 
-            #assert '/' in magnitude
-            #num, denom = magnitude.split('/')
-            #num = float(num)
-            #denom = float(denom)
-            #magnitude = float(num / denom)
     else:
         magnitude = fromq
     unit = fromq[index:]

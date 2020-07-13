@@ -79,6 +79,7 @@ def topint(*, fromq, ureg, verbose=False):
             if verbose:
                 ic(magnitude)
 
+            assert magnitude[0].isdigit()
             magnitude = float(eval(magnitude))
 
     else:

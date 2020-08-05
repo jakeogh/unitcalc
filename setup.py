@@ -8,7 +8,7 @@ import sys
 if not sys.version_info[0] == 3:
     sys.exit("Sorry, Python 3 is required. Use: \'python3 setup.py install\'")
 
-dependencies = []
+dependencies = ['python-levenshtein']
 version = 0.01
 
 setup(

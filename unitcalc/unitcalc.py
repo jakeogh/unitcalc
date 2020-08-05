@@ -109,36 +109,43 @@ def topint(*, fromq, ureg, verbose=False):
     return fromq_parsed
 
 
+def convert_unit(from_string, to_unit_string, verbose=False):
+    ureg = UnitRegistry(system='mks')
+    assert not to_unit_string[0].isdigit()
+
+    fromq_parsed = topint(fromq=from_string, ureg=ureg, verbose=verbose)
+
+    if verbose:
+        #ic(fromq)
+        ic(to_unit_string)
+
+    try:
+        to_unit_string_target = ureg.parse_units(to_unit_string)
+    except UndefinedUnitError as e:
+        if verbose:
+            ic("UndefinedUnitError:", e)
+
+        found_unit = find_unit(ulist=dir(ureg), in_unit=to_unit_string, verbose=verbose)
+        to_unit_string_target = ureg.parse_units(found_unit)
+
+    if verbose:
+        ic(to_unit_string_target)
+
+    fromq_converted = fromq_parsed.to(to_unit_string_target)
+    if verbose:
+        ic(fromq_converted)
+        ic(fromq_converted.magnitude)
+
+    return fromq_converted
+
 @click.command()
 @click.argument('fromq', required=True)
 @click.argument('toq', required=True)
 @click.option('--verbose', is_flag=True)
 def cli(fromq, toq, verbose):
 
-    ureg = UnitRegistry(system='mks')
-    assert not toq[0].isdigit()
-
-    fromq_parsed = topint(fromq=fromq, ureg=ureg, verbose=verbose)
-
-    if verbose:
-        #ic(fromq)
-        ic(toq)
-
-    try:
-        toq_target = ureg.parse_units(toq)
-    except UndefinedUnitError as e:
-        if verbose:
-            ic("UndefinedUnitError:", e)
-
-        found_unit = find_unit(ulist=dir(ureg), in_unit=toq, verbose=verbose)
-        toq_target = ureg.parse_units(found_unit)
-
-    if verbose:
-        ic(toq_target)
-
-    fromq_converted = fromq_parsed.to(toq_target)
-    if verbose:
-        ic(fromq_converted)
-        ic(fromq_converted.magnitude)
+    fromq_converted = convert_unit(from_string=fromq,
+                                   to_string=toq,
+                                   verbose=verbose)
 
     print(fromq_converted)

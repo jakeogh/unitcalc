@@ -145,7 +145,7 @@ def convert_unit(from_string, to_unit_string, verbose=False):
 def cli(fromq, toq, verbose):
 
     fromq_converted = convert_unit(from_string=fromq,
-                                   to_string=toq,
+                                   to_unit_string=toq,
                                    verbose=verbose)
 
     print(fromq_converted)

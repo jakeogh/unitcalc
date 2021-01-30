@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf8 -*-
 
-from icecream import ic
-
 # pylint: disable=C0111     # docstrings are always outdated and wrong
 # pylint: disable=W0511     # todo is encouraged
 # pylint: disable=R0902     # too many instance attributes
@@ -111,11 +109,17 @@ def topint(*, fromq, ureg, verbose=False):
     return fromq_parsed
 
 
-def convert_unit(from_string, to_unit_string, verbose=False):
-    ureg = UnitRegistry(system='mks')
+def convert_unit(*,
+                 fromq_pint,
+                 to_unit_string,
+                 ureg=None,
+                 verbose: bool = False,
+                 debug: bool = False):
+    if not ureg:
+        ureg = UnitRegistry(system='mks')
+
     assert not to_unit_string[0].isdigit()
 
-    fromq_parsed = topint(fromq=from_string, ureg=ureg, verbose=verbose)
 
     if verbose:
         #ic(fromq)
@@ -133,7 +137,7 @@ def convert_unit(from_string, to_unit_string, verbose=False):
     if verbose:
         ic(to_unit_string_target)
 
-    fromq_converted = fromq_parsed.to(to_unit_string_target)
+    fromq_converted = fromq_pint.to(to_unit_string_target)
     if verbose:
         ic(fromq_converted)
         ic(fromq_converted.magnitude)
@@ -151,8 +155,11 @@ def cli(fromq,
         verbose,
         ipython,):
 
-    fromq_converted = convert_unit(from_string=fromq,
+    ureg = UnitRegistry(system='mks')
+    fromq_pint = topint(fromq=fromq, ureg=ureg, verbose=verbose)
+    fromq_converted = convert_unit(fromq_pint=fromq_pint,
                                    to_unit_string=toq,
+                                   ureg=ureg,
                                    verbose=verbose)
 
     print(fromq_converted)

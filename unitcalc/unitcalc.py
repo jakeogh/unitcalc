@@ -181,7 +181,7 @@ def cli(quantity,
         return
     for unit in to_units:
         fromq_converted = convert_unit(fromq_pint=fromq_pint,
-                                       to_unit_string=to_units,
+                                       to_unit_string=unit,
                                        ureg=ureg,
                                        verbose=verbose)
 

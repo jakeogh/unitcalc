@@ -30,7 +30,11 @@ def eprint(*args, **kwargs):
     print(*args, **kwargs, file=sys.stderr)
 
 
-def find_unit(*, ulist, in_unit, verbose=False):
+def find_unit(*,
+              ulist,
+              in_unit,
+              verbose: bool = False,
+              debug: bool = False,):
     distance = -1
     for unit in ulist:
         dist = StringMatcher.distance(in_unit, unit)
@@ -47,7 +51,11 @@ def find_unit(*, ulist, in_unit, verbose=False):
     return winning_unit
 
 
-def topint(*, fromq, ureg, verbose=False):
+def topint(*,
+           fromq,
+           ureg,
+           verbose: bool = False,
+           debug: bool = False,):
 
     if not fromq[0].isdigit():
         assert fromq[0] == '.'
@@ -147,7 +155,7 @@ def convert_unit(*,
 
 @click.command()
 @click.argument('fromq', required=True)
-@click.argument('toq', required=True)
+@click.argument('toq', required=False)
 @click.option('--verbose', is_flag=True)
 @click.option('--ipython', is_flag=True)
 def cli(fromq,
@@ -157,6 +165,9 @@ def cli(fromq,
 
     ureg = UnitRegistry(system='mks')
     fromq_pint = topint(fromq=fromq, ureg=ureg, verbose=verbose)
+    if not toq:
+        print(fromq_pint.to_base_units())
+        return
     fromq_converted = convert_unit(fromq_pint=fromq_pint,
                                    to_unit_string=toq,
                                    ureg=ureg,

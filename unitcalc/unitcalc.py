@@ -166,14 +166,14 @@ def convert_unit(*,
 @click.argument('to_units', nargs=-1)
 @click.option('--verbose', is_flag=True)
 @click.option('--ipython', is_flag=True)
-def cli(fromq,
+def cli(quantity,
         to_units,
         verbose,
         ipython,):
 
     ureg = UnitRegistry(system='mks')
-    fromq_pint = topint(fromq=fromq, ureg=ureg, verbose=verbose)
-    if not toq:
+    fromq_pint = topint(fromq=quantity, ureg=ureg, verbose=verbose)
+    if not to_units:
         print(fromq_pint.to_base_units())
         return
     for unit in to_units:

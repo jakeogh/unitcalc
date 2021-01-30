@@ -21,6 +21,7 @@ setup(
     description='Replace text in files(s) or stdin.',
     long_description=__doc__,
     packages=find_packages(exclude=['tests']),
+    package_data={"unitcalc": ["py.typed"]},
     include_package_data=True,
     zip_safe=False,
     platforms='any',

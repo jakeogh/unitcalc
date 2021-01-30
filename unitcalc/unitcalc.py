@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf8 -*-
 
+from icecream import ic
+
 # pylint: disable=C0111     # docstrings are always outdated and wrong
 # pylint: disable=W0511     # todo is encouraged
 # pylint: disable=R0902     # too many instance attributes
@@ -15,14 +17,14 @@
 # pylint: disable=R0903     # too few public methods
 # pylint: disable=E1101     # no member for base
 # pylint: disable=W0201     # attribute defined outside __init__
-
 import re
 import sys
-from icecream import ic
+
 import click
+from icecream import ic
+from Levenshtein import StringMatcher
 from pint import UnitRegistry
 from pint.errors import UndefinedUnitError
-from Levenshtein import StringMatcher
 
 
 def eprint(*args, **kwargs):
@@ -143,10 +145,16 @@ def convert_unit(from_string, to_unit_string, verbose=False):
 @click.argument('fromq', required=True)
 @click.argument('toq', required=True)
 @click.option('--verbose', is_flag=True)
-def cli(fromq, toq, verbose):
+@click.option('--ipython', is_flag=True)
+def cli(fromq,
+        toq,
+        verbose,
+        ipython,):
 
     fromq_converted = convert_unit(from_string=fromq,
                                    to_unit_string=toq,
                                    verbose=verbose)
 
     print(fromq_converted)
+    if ipython:
+        import IPython; IPython.embed()

@@ -19,6 +19,7 @@ import re
 import sys
 
 import click
+from enumerate_input import enumerate_input
 from icecream import ic
 from Levenshtein import StringMatcher
 from pint import UnitRegistry
@@ -28,6 +29,12 @@ from pint.errors import UndefinedUnitError
 def eprint(*args, **kwargs):
     kwargs.pop('file', None)
     print(*args, **kwargs, file=sys.stderr)
+
+
+try:
+    from icecream import ic
+except ImportError:
+    ic = eprint
 
 
 def find_unit(*,
@@ -80,7 +87,7 @@ def topint(*,
         except ValueError:
             # should use https://github.com/sopel-irc/sopel/blob/master/sopel/tools/calculation.py
             # or sage
-            expression_pattern = re.compile("[0-9/\*e.+\-()]")
+            expression_pattern = re.compile(r"[0-9/\*e.+\-()]")
             for item in magnitude:
                 assert expression_pattern.match(item)
 
@@ -128,7 +135,6 @@ def convert_unit(*,
 
     assert not to_unit_string[0].isdigit()
 
-
     if verbose:
         #ic(fromq)
         ic(to_unit_string)
@@ -139,7 +145,9 @@ def convert_unit(*,
         if verbose:
             ic("UndefinedUnitError:", e)
 
-        found_unit = find_unit(ulist=dir(ureg), in_unit=to_unit_string, verbose=verbose)
+        found_unit = find_unit(ulist=dir(ureg),
+                               in_unit=to_unit_string,
+                               verbose=verbose)
         to_unit_string_target = ureg.parse_units(found_unit)
 
     if verbose:
@@ -154,12 +162,12 @@ def convert_unit(*,
 
 
 @click.command()
-@click.argument('fromq', required=True)
-@click.argument('toq', required=False)
+@click.argument('quantity', required=True)
+@click.argument('to_units', nargs=-1)
 @click.option('--verbose', is_flag=True)
 @click.option('--ipython', is_flag=True)
 def cli(fromq,
-        toq,
+        to_units,
         verbose,
         ipython,):
 
@@ -168,11 +176,13 @@ def cli(fromq,
     if not toq:
         print(fromq_pint.to_base_units())
         return
-    fromq_converted = convert_unit(fromq_pint=fromq_pint,
-                                   to_unit_string=toq,
-                                   ureg=ureg,
-                                   verbose=verbose)
+    for unit in to_units:
+        fromq_converted = convert_unit(fromq_pint=fromq_pint,
+                                       to_unit_string=to_units,
+                                       ureg=ureg,
+                                       verbose=verbose)
 
-    print(fromq_converted)
+        print(fromq_converted)
+
     if ipython:
         import IPython; IPython.embed()

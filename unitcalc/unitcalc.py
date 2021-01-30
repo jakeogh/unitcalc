@@ -171,6 +171,9 @@ def cli(quantity,
         verbose,
         ipython,):
 
+    if verbose:
+        ic(quantity, to_units)
+
     ureg = UnitRegistry(system='mks')
     fromq_pint = topint(fromq=quantity, ureg=ureg, verbose=verbose)
     if not to_units:

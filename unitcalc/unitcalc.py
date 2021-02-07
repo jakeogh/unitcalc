@@ -39,8 +39,8 @@ except ImportError:
 def find_unit(*,
               ulist,
               in_unit,
-              verbose: bool = False,
-              debug: bool = False,):
+              verbose: bool,
+              debug: bool,):
     distance = -1
     for unit in ulist:
         dist = StringMatcher.distance(in_unit, unit)
@@ -60,8 +60,8 @@ def find_unit(*,
 def topint(*,
            fromq,
            ureg,
-           verbose: bool = False,
-           debug: bool = False,):
+           verbose: bool,
+           debug: bool,):
 
     if not fromq[0].isdigit():
         assert fromq[0] == '.'
@@ -110,7 +110,10 @@ def topint(*,
     except UndefinedUnitError as e:
         if verbose:
             ic(e)
-        found_unit = find_unit(ulist=dir(ureg), in_unit=unit, verbose=verbose)
+        found_unit = find_unit(ulist=dir(ureg),
+                               in_unit=unit,
+                               verbose=verbose,
+                               debug=debug,)
         if verbose:
             ic(found_unit)
         fromq_target = ureg.parse_units(found_unit)
@@ -128,8 +131,8 @@ def convert_unit(*,
                  fromq_pint,
                  to_unit_string,
                  ureg=None,
-                 verbose: bool = False,
-                 debug: bool = False):
+                 verbose: bool,
+                 debug: bool):
     if not ureg:
         ureg = UnitRegistry(system='mks')
 
@@ -147,7 +150,8 @@ def convert_unit(*,
 
         found_unit = find_unit(ulist=dir(ureg),
                                in_unit=to_unit_string,
-                               verbose=verbose)
+                               verbose=verbose,
+                               debug=debug,)
         to_unit_string_target = ureg.parse_units(found_unit)
 
     if verbose:
@@ -165,17 +169,22 @@ def convert_unit(*,
 @click.argument('quantity', required=True)
 @click.argument('to_units', nargs=-1)
 @click.option('--verbose', is_flag=True)
+@click.option('--debug', is_flag=True)
 @click.option('--ipython', is_flag=True)
-def cli(quantity,
-        to_units,
-        verbose,
-        ipython,):
+def cli(quantity: str,
+        to_units: str,
+        verbose: bool,
+        debug: bool,
+        ipython: bool,):
 
     if verbose:
         ic(quantity, to_units)
 
     ureg = UnitRegistry(system='mks')
-    fromq_pint = topint(fromq=quantity, ureg=ureg, verbose=verbose)
+    fromq_pint = topint(fromq=quantity,
+                        ureg=ureg,
+                        verbose=verbose,
+                        debug=debug,)
     if not to_units:
         print(fromq_pint.to_base_units())
         return
@@ -183,7 +192,8 @@ def cli(quantity,
         fromq_converted = convert_unit(fromq_pint=fromq_pint,
                                        to_unit_string=unit,
                                        ureg=ureg,
-                                       verbose=verbose)
+                                       verbose=verbose,
+                                       debug=debug,)
 
         print(fromq_converted)
 

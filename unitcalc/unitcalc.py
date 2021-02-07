@@ -20,7 +20,6 @@ import sys
 
 import click
 from enumerate_input import enumerate_input
-from icecream import ic
 from Levenshtein import StringMatcher
 from pint import UnitRegistry
 from pint.errors import UndefinedUnitError
@@ -69,6 +68,7 @@ def topint(*,
         fromq = '0' + fromq
 
     # find the end of the magnitude
+    index = None
     for index, letter in enumerate(fromq):
         if letter.isalpha():  # ",".isalpha() == False (and .)
             if letter == 'e':

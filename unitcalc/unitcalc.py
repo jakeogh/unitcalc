@@ -17,12 +17,17 @@
 # pylint: disable=W0201     # attribute defined outside __init__
 import re
 import sys
+from typing import List
 
 import click
 from enumerate_input import enumerate_input
 from Levenshtein import StringMatcher
 from pint import UnitRegistry
 from pint.errors import UndefinedUnitError
+
+
+class UnitAlreadyDefinedError(ValueError):
+    pass
 
 
 def eprint(*args, **kwargs):
@@ -34,6 +39,50 @@ try:
     from icecream import ic
 except ImportError:
     ic = eprint
+
+
+def add_unit_to_ureg(ureg, *,
+                     unit_name: str,
+                     unit_def: str,
+                     unit_symbol: str,
+                     unit_aliases: List[str],
+                     verbose: bool,
+                     debug: bool,):
+    if verbose:
+        ic(unit_name, unit_def, unit_symbol, unit_aliases)
+
+    assert unit_name not in unit_aliases
+    assert unit_symbol not in unit_aliases
+
+    if unit_name in ureg:
+        raise UnitAlreadyDefinedError(unit_name)
+
+    unit_def_string = '{unit_name} = {unit_def} = {unit_symbol} = '
+    unit_def_string = unit_def_string.format(unit_name=unit_name,
+                                             unit_def=unit_def,
+                                             unit_symbol=unit_symbol,)
+    if unit_aliases:
+        unit_def_string += '= '.join(unit_aliases)
+
+    if verbose:
+        ic(unit_def_string)
+
+    ureg.define(unit_def_string)
+    return ureg
+
+
+def construct_unitregistry(verbose: bool,
+                           debug: bool,):
+    ureg = UnitRegistry(system='mks')
+    ureg = add_unit_to_ureg(ureg,
+                            unit_name='ell',
+                            unit_def='45 * inch',
+                            unit_symbol='_',
+                            unit_aliases=[],
+                            verbose=verbose,
+                            debug=debug,)
+
+    return ureg
 
 
 def find_unit(*,
@@ -130,11 +179,10 @@ def topint(*,
 def convert_unit(*,
                  fromq_pint,
                  to_unit_string,
-                 ureg=None,
+                 ureg,
                  verbose: bool,
                  debug: bool):
-    if not ureg:
-        ureg = UnitRegistry(system='mks')
+    #if not ureg:
 
     assert not to_unit_string[0].isdigit()
 
@@ -180,7 +228,8 @@ def cli(quantity: str,
     if verbose:
         ic(quantity, to_units)
 
-    ureg = UnitRegistry(system='mks')
+    ureg = construct_unitregistry(verbose=verbose, debug=debug,)
+
     fromq_pint = topint(fromq=quantity,
                         ureg=ureg,
                         verbose=verbose,

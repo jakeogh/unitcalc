@@ -74,9 +74,18 @@ def add_unit_to_ureg(ureg, *,
 def construct_unitregistry(verbose: bool,
                            debug: bool,):
     ureg = UnitRegistry(system='mks')
+
+    # https://en.wikipedia.org/wiki/Ell
     ureg = add_unit_to_ureg(ureg,
                             unit_name='ell',
                             unit_def='45 * inch',
+                            unit_symbol='_',
+                            unit_aliases=[],
+                            verbose=verbose,
+                            debug=debug,)
+    ureg = add_unit_to_ureg(ureg,
+                            unit_name='scottish_ell',
+                            unit_def='37 * inch',
                             unit_symbol='_',
                             unit_aliases=[],
                             verbose=verbose,
@@ -90,6 +99,7 @@ def find_unit(*,
               in_unit,
               verbose: bool,
               debug: bool,):
+
     distance = -1
     for unit in ulist:
         dist = StringMatcher.distance(in_unit, unit)
@@ -100,9 +110,7 @@ def find_unit(*,
             if dist < distance:
                 distance = dist
                 winning_unit = unit
-    if verbose:
-        eprint("Converting {0} to {1}".format(in_unit, winning_unit))
-
+    eprint("Converting {0} to {1}".format(in_unit, winning_unit))
     return winning_unit
 
 

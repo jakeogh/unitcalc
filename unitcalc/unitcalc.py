@@ -91,6 +91,16 @@ def construct_unitregistry(verbose: bool,
                             verbose=verbose,
                             debug=debug,)
 
+    # https://en.wikipedia.org/wiki/Ancient_Egyptian_units_of_measurement
+    ureg = add_unit_to_ureg(ureg,
+                            unit_name='royal_cubit',
+                            unit_def='52.3 * cm',
+                            unit_symbol='_',
+                            unit_aliases=[],
+                            verbose=verbose,
+                            debug=debug,)
+
+
     return ureg
 
 

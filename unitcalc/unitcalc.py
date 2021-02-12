@@ -100,7 +100,6 @@ def construct_unitregistry(verbose: bool,
                             verbose=verbose,
                             debug=debug,)
 
-
     return ureg
 
 

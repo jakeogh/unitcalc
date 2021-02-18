@@ -74,6 +74,7 @@ def add_unit_to_ureg(ureg, *,
 def construct_unitregistry(verbose: bool,
                            debug: bool,):
     ureg = UnitRegistry(system='mks')
+    ureg.enable_contexts("Gaussian")  # https://github.com/hgrecco/pint/issues/1205
 
     # https://en.wikipedia.org/wiki/Ell
     ureg = add_unit_to_ureg(ureg,

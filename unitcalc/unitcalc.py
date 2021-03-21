@@ -41,6 +41,20 @@ except ImportError:
     ic = eprint
 
 
+def human_filesize_to_int(size,
+                          verbose=False,
+                          debug=False):
+    u = UnitRegistry()
+    i = u.parse_expression(size)
+    result = i.to('bytes').magnitude
+    #result = int(result)
+    if verbose:
+        ic(result)
+    if debug:
+        assert isinstance(result, int)
+    return result
+
+
 def add_unit_to_ureg(ureg, *,
                      unit_name: str,
                      unit_def: str,

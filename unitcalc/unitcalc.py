@@ -42,16 +42,16 @@ except ImportError:
 
 
 def human_filesize_to_int(size,
-                          verbose=False,
-                          debug=False):
+                          verbose: bool = False,
+                          debug: bool = False
+                          ):
     u = UnitRegistry()
     i = u.parse_expression(size)
     result = i.to('bytes').magnitude
     #result = int(result)
     if verbose:
         ic(result)
-    if debug:
-        assert isinstance(result, int)
+    assert isinstance(result, int)
     return result
 
 

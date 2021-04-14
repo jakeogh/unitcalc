@@ -51,8 +51,8 @@ def human_filesize_to_int(size,
     #result = int(result)
     if verbose:
         ic(result)
-    assert isinstance(result, int)
-    return result
+    #assert isinstance(result, int)
+    return int(result)
 
 
 def add_unit_to_ureg(ureg, *,

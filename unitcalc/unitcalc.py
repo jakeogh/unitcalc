@@ -379,6 +379,8 @@ def cli(quantity: str,
     ic(magnitude_list)
 
     for unit in to_units:
+        if (verbose or debug):
+            ic(unit)
         fromq_converted = convert_pint_atom_to_unit(pint_atom=total_value,
                                                     to_unit_string=unit,
                                                     ureg=ureg,

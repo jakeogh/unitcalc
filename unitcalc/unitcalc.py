@@ -89,7 +89,7 @@ def add_unit_to_ureg(ureg, *,
 
 def construct_unitregistry(verbose: bool,
                            debug: bool,):
-    ureg = UnitRegistry(system='mks')
+    ureg = UnitRegistry(system='mks', non_int_type=Decimal)
     ureg.enable_contexts("Gaussian")  # https://github.com/hgrecco/pint/issues/1205
 
     # https://en.wikipedia.org/wiki/Ell

@@ -22,7 +22,7 @@ from typing import List
 import click
 from enumerate_input import enumerate_input
 from Levenshtein import StringMatcher
-from number_parser import parse
+from number_parser import parse as parse_words_to_numbers
 from pint import UnitRegistry
 from pint.errors import UndefinedUnitError
 
@@ -142,31 +142,22 @@ def find_unit(*,
     return winning_unit
 
 
-def topint(*,
-           fromq,
-           ureg,
-           verbose: bool,
-           debug: bool,
-           ):
+
+
+def convert_atom_to_pint(*,
+                         fromq,
+                         ureg,
+                         verbose: bool,
+                         debug: bool,
+                         ):
 
     if verbose or debug:
         ic(fromq)
 
-    # normalize whitespace to single space
-    fromq = fromq.split(' ')
-    fromq = ' '.join([i for i in fromq if i])
-
+    # this might need to be earlier
     if not fromq[0].isdigit():
         if fromq[0] == '.':
             fromq = '0' + fromq
-        else:
-            ic('possible human', fromq)
-            fromq_human = parse(fromq)
-            ic(fromq_human)
-            sys.exit(1)
-
-    if verbose or debug:
-        ic(fromq)
 
     # find the end of the magnitude
     index = None
@@ -228,13 +219,80 @@ def topint(*,
     return fromq_parsed
 
 
-def convert_unit(*,
-                 fromq_pint,
-                 to_unit_string,
-                 ureg,
-                 verbose: bool,
-                 debug: bool,
-                 ):
+# remove duplicat spaces, convert words to numbers
+def normalize_human_input(*,
+                          human_input: str,
+                          verbose: bool,
+                          debug: bool,
+                          ):
+    if verbose or debug:
+        ic(human_input)
+
+    # normalize whitespace to single space
+    human_input = human_input.split(' ')
+    human_input = ' '.join([i for i in human_input if i])
+
+    human_input = parse_words_to_numbers(human_input)
+
+    return human_input
+
+
+#todo, make sure scientific notation and equations work
+def split_human_input_on_numbers(*,
+                                 human_input: str,
+                                 verbose: bool,
+                                 debug: bool,
+                                 ):
+    if (verbose or debug):
+        ic(human_input)
+
+    list_of_human_imput_atoms = re.split(r"\s(?=[0-9]*.)", human_input)
+    if (verbose or debug):
+        ic(list_of_human_imput_atoms)
+    return list_of_human_imput_atoms
+
+
+# this stakes a arb string, which could be many atoms, and joins them into one pint atom
+def convert_string_to_pint(*,
+                           human_input: str,
+                           ureg,
+                           verbose: bool,
+                           debug: bool,
+                           ):
+
+    human_input = normalize_human_input(human_input=human_input,
+                                        verbose=verbose,
+                                        debug=debug,)
+    if (verbose or debug):
+        ic(human_input)
+
+    # at this point, the string is [number] [space] [unit description] so split on numbers
+
+    human_input_atoms = split_human_input_on_numbers(human_input=human_input,
+                                                     verbose=verbose,
+                                                     debug=debug,)
+
+    for atom in human_input_atoms:
+        ic(atom)
+
+        pint_atom = convert_atom_to_pint(fromq=atom,
+                                         ureg=ureg,
+                                         verbose=verbose,
+                                         debug=debug,)
+
+        ic(pint_atom)
+        return pint_atom
+
+
+
+# this is the last step
+def convert_pint_atom_to_unit(*,
+                              fromq_pint,
+                              to_unit_string,
+                              ureg,
+                              verbose: bool,
+                              debug: bool,
+                              ):
 
     assert not to_unit_string[0].isdigit()
 
@@ -282,19 +340,23 @@ def cli(quantity: str,
 
     ureg = construct_unitregistry(verbose=verbose, debug=debug,)
 
-    fromq_pint = topint(fromq=quantity,
-                        ureg=ureg,
-                        verbose=verbose,
-                        debug=debug,)
+    fromq_pint = convert_string_to_pint(human_input=quantity,
+                                        ureg=ureg,
+                                        verbose=verbose,
+                                        debug=debug,)
+
+    ic(type(fromq_pint), fromq_pint)
+
     if not to_units:
         print(fromq_pint.to_base_units())
         return
+
     for unit in to_units:
-        fromq_converted = convert_unit(fromq_pint=fromq_pint,
-                                       to_unit_string=unit,
-                                       ureg=ureg,
-                                       verbose=verbose,
-                                       debug=debug,)
+        fromq_converted = convert_pint_atom_to_unit(fromq_pint=fromq_pint,
+                                                    to_unit_string=unit,
+                                                    ureg=ureg,
+                                                    verbose=verbose,
+                                                    debug=debug,)
 
         print(fromq_converted)
 

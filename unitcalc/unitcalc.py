@@ -246,12 +246,13 @@ def split_human_input_on_numbers(*,
     if (verbose or debug):
         ic(human_input)
 
-    #list_of_human_imput_atoms = re.split(r"\s(?=[0-9]*.)", human_input)
-    #list_of_human_imput_atoms = re.split(r"\s(?=[0-9]*\.*[0-9]*[ ]*\D)", human_input)
-    list_of_human_imput_atoms = re.split(r"[0-9]*\.*[0-9]*[ ]*\D", human_input)
+    #list_of_human_input_atoms = re.split(r"\s(?=[0-9]*.)", human_input)
+    #list_of_human_input_atoms = re.split(r"\s(?=[0-9]*\.*[0-9]*[ ]*\D)", human_input)
+    #list_of_human_input_atoms = re.split(r"[0-9]*\.*[0-9]*[ ]*\D", human_input)
+    list_of_human_input_atoms = re.findall(r'\d+[^\d]+', human_input)
     if (verbose or debug):
-        ic(list_of_human_imput_atoms)
-    return list_of_human_imput_atoms
+        ic(list_of_human_input_atoms)
+    return list_of_human_input_atoms
 
 
 # this stakes a arb string, which could be many atoms, and joins them into one pint atom

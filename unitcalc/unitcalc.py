@@ -17,6 +17,7 @@
 # pylint: disable=W0201     # attribute defined outside __init__
 import re
 import sys
+from decimal import Decimal
 from typing import List
 
 import click
@@ -347,7 +348,7 @@ def cli(quantity: str,
     ureg = construct_unitregistry(verbose=verbose, debug=debug,)
 
     atoms = []
-    total = None
+    total_magnitude = None
     for atom in generate_pint_atoms_from_string(human_input=quantity,
                                                 ureg=ureg,
                                                 verbose=verbose,
@@ -363,10 +364,10 @@ def cli(quantity: str,
         atom = atom.to_base_units()
         print(atom)
         atoms.append(atom)
-        if not total:
-            total = atom
+        if not total_magnitude:
+            total = Decimal(atom.magnitude)
         else:
-            total += atom
+            total += Decimal(atom.magnitude)
 
     ic(atoms)
     ic(total)

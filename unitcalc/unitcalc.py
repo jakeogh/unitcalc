@@ -163,6 +163,9 @@ def topint(*,
             ic(fromq_human)
             sys.exit(1)
 
+    if verbose or debug:
+        ic(fromq)
+
     # find the end of the magnitude
     index = None
     for index, letter in enumerate(fromq):

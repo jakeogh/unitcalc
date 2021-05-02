@@ -22,6 +22,7 @@ from typing import List
 import click
 from enumerate_input import enumerate_input
 from Levenshtein import StringMatcher
+from number_parser import parse
 from pint import UnitRegistry
 from pint.errors import UndefinedUnitError
 
@@ -124,7 +125,8 @@ def find_unit(*,
               ulist,
               in_unit,
               verbose: bool,
-              debug: bool,):
+              debug: bool,
+              ):
 
     distance = -1
     for unit in ulist:
@@ -144,7 +146,8 @@ def topint(*,
            fromq,
            ureg,
            verbose: bool,
-           debug: bool,):
+           debug: bool,
+           ):
 
     if not fromq[0].isdigit():
         assert fromq[0] == '.'
@@ -215,8 +218,8 @@ def convert_unit(*,
                  to_unit_string,
                  ureg,
                  verbose: bool,
-                 debug: bool):
-    #if not ureg:
+                 debug: bool,
+                 ):
 
     assert not to_unit_string[0].isdigit()
 

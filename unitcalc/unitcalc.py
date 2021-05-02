@@ -346,7 +346,7 @@ def cli(quantity: str,
 
     ureg = construct_unitregistry(verbose=verbose, debug=debug,)
 
-    #atoms_magnitude = 0.0
+    atoms = []
     for atom in generate_pint_atoms_from_string(human_input=quantity,
                                                 ureg=ureg,
                                                 verbose=verbose,
@@ -357,10 +357,13 @@ def cli(quantity: str,
         #                                           ureg=ureg,
         #                                           verbose=verbose,
         #                                           debug=debug,)
-        print(atom)
 
-        if not to_units:
-            print(atom.to_base_units())
+        ic(atom)
+        atom = atom.to_base_units()
+        print(atom)
+        atoms.append(atom)
+
+    ic(atoms)
 
 
     #for unit in to_units:

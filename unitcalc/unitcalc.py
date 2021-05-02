@@ -142,38 +142,36 @@ def find_unit(*,
     return winning_unit
 
 
-
-
 def convert_atom_to_pint(*,
-                         fromq,
+                         atom,
                          ureg,
                          verbose: bool,
                          debug: bool,
                          ):
 
     if verbose or debug:
-        ic(fromq)
+        ic(atom)
 
     # this might need to be earlier
-    if not fromq[0].isdigit():
-        if fromq[0] == '.':
-            fromq = '0' + fromq
+    if not atom[0].isdigit():
+        if atom[0] == '.':
+            atom = '0' + atom
 
     # find the end of the magnitude
     index = None
-    for index, letter in enumerate(fromq):
+    for index, letter in enumerate(atom):
         if letter.isalpha():  # ",".isalpha() == False (and .)
             if letter == 'e':
-                if not fromq[index + 1].isdigit():
+                if not atom[index + 1].isdigit():
                     break
             else:
                 break
 
     if verbose:
-        ic(fromq)
+        ic(atom)
 
     if index:
-        magnitude = fromq[:index].replace(',', '')
+        magnitude = atom[:index].replace(',', '')
         try:
             magnitude = float(magnitude)
         except ValueError:
@@ -188,17 +186,17 @@ def convert_atom_to_pint(*,
 
             assert magnitude[0].isdigit()
             magnitude = float(eval(magnitude))
-
     else:
-        magnitude = fromq
-    unit = fromq[index:]
+        magnitude = atom
+
+    unit = atom[index:]
 
     if verbose:
         ic(magnitude)
         ic(unit)
 
     try:
-        fromq_target = ureg.parse_units(unit)
+        atom_target = ureg.parse_units(unit)
     except UndefinedUnitError as e:
         if verbose:
             ic(e)
@@ -208,15 +206,15 @@ def convert_atom_to_pint(*,
                                debug=debug,)
         if verbose:
             ic(found_unit)
-        fromq_target = ureg.parse_units(found_unit)
+        atom_target = ureg.parse_units(found_unit)
 
     Q_ = ureg.Quantity
-    fromq_parsed = Q_(magnitude, fromq_target)
+    atom_parsed = Q_(magnitude, atom_target)
 
     if verbose:
-        ic(fromq_parsed)
+        ic(atom_parsed)
 
-    return fromq_parsed
+    return atom_parsed
 
 
 # remove duplicat spaces, convert words to numbers
@@ -280,7 +278,7 @@ def generate_pint_atoms_from_string(*,
     for atom in human_input_atoms:
         ic(atom)
 
-        pint_atom = convert_atom_to_pint(fromq=atom,
+        pint_atom = convert_atom_to_pint(atom=atom,
                                          ureg=ureg,
                                          verbose=verbose,
                                          debug=debug,)

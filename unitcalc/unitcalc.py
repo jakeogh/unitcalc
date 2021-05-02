@@ -149,9 +149,17 @@ def topint(*,
            debug: bool,
            ):
 
+    if verbose or debug:
+        ic(fromq)
+
     if not fromq[0].isdigit():
-        assert fromq[0] == '.'
-        fromq = '0' + fromq
+        if fromq[0] == '.':
+            fromq = '0' + fromq
+        else:
+            ic('possible human', fromq)
+            fromq_human = parse(fromq)
+            ic(fromq_human)
+            sys.exit(1)
 
     # find the end of the magnitude
     index = None

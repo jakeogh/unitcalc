@@ -152,7 +152,9 @@ def topint(*,
     if verbose or debug:
         ic(fromq)
 
-    fromq = ' '.join(fromq.split(' '))  # normalize whitespace to single space
+    # normalize whitespace to single space
+    fromq = fromq.split(' ')
+    fromq = ' '.join([i for i in fromq if i])
 
     if not fromq[0].isdigit():
         if fromq[0] == '.':

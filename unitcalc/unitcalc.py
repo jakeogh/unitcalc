@@ -152,6 +152,8 @@ def topint(*,
     if verbose or debug:
         ic(fromq)
 
+    fromq = ' '.join(fromq.split(' '))  # normalize whitespace to single space
+
     if not fromq[0].isdigit():
         if fromq[0] == '.':
             fromq = '0' + fromq

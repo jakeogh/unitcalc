@@ -359,7 +359,7 @@ def cli(quantity: str,
         #                                           ureg=ureg,
         #                                           verbose=verbose,
         #                                           debug=debug,)
-        ic(atom)
+        print(atom)
 
         if not to_units:
             print(atom.to_base_units())

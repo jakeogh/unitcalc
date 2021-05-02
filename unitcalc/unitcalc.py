@@ -367,7 +367,7 @@ def cli(quantity: str,
         atoms.append(atom)
         atom_decimal = Decimal(atom.magnitude)
         ic(atom_decimal)
-        magnitude_list.append(atom.decimal)
+        magnitude_list.append(atom_decimal)
         if total_magnitude == 'unset':
             total_magnitude = atom_decimal
         else:

@@ -349,8 +349,8 @@ def cli(quantity: str,
     ureg = construct_unitregistry(verbose=verbose, debug=debug,)
 
     atoms = []
-    total_value = 'unset'
-    magnitude_list = []
+    total_magnitude = 'unset'
+    #magnitude_list = []
     for atom in generate_pint_atoms_from_string(human_input=quantity,
                                                 ureg=ureg,
                                                 verbose=verbose,
@@ -368,20 +368,25 @@ def cli(quantity: str,
         atoms.append(atom)
         atom_decimal = Decimal(atom.magnitude)
         ic(atom_decimal)
-        magnitude_list.append(atom_decimal)
-        if total_value == 'unset':
-            total_value = atom_decimal
+        #magnitude_list.append(atom_decimal)
+        if total_magnitude == 'unset':
+            total_magnitude = atom_decimal
         else:
-            total_value += atom_decimal
+            total_magnitude += atom_decimal
 
     ic(atoms)
-    ic(total_value)
-    ic(magnitude_list)
+    ic(total_magnitude)
+    #ic(magnitude_list)
+
+    summed_atoms = atoms[0]
+    for atom in atoms[1:]:
+        summed_atoms += atom
+
 
     for unit in to_units:
         if (verbose or debug):
             ic(unit)
-        fromq_converted = convert_pint_atom_to_unit(pint_atom=total_value,
+        fromq_converted = convert_pint_atom_to_unit(pint_atom=summed_atoms,
                                                     to_unit_string=unit,
                                                     ureg=ureg,
                                                     verbose=verbose,

@@ -23,7 +23,8 @@ from typing import List
 import click
 from enumerate_input import enumerate_input
 from Levenshtein import StringMatcher
-from number_parser import parse as parse_words_to_numbers
+#from number_parser import parse as parse_words_to_numbers
+from number_parser import parse_number
 from pint import UnitRegistry
 from pint.errors import UndefinedUnitError
 
@@ -230,13 +231,16 @@ def normalize_human_input(*,
 
     # normalize whitespace to single space
     human_input = human_input.split(' ')
-    human_input = ' '.join([i for i in human_input if i])
+    human_input = [i for i in human_input if i]
 
     if verbose or debug:
         ic(human_input)
 
-    human_input = parse_words_to_numbers(human_input)
+    for atom in human_input:
+        ic(atom)
 
+    #human_input = parse_words_to_numbers(human_input)
+    sys.exit(1)
     if verbose or debug:
         ic(human_input)
 

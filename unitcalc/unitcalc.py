@@ -246,9 +246,6 @@ def split_human_input_on_numbers(*,
     if (verbose or debug):
         ic(human_input)
 
-    #list_of_human_input_atoms = re.split(r"\s(?=[0-9]*.)", human_input)
-    #list_of_human_input_atoms = re.split(r"\s(?=[0-9]*\.*[0-9]*[ ]*\D)", human_input)
-    #list_of_human_input_atoms = re.split(r"[0-9]*\.*[0-9]*[ ]*\D", human_input)
     list_of_human_input_atoms = re.findall(r'\d+[^\d]+', human_input)
     if (verbose or debug):
         ic(list_of_human_input_atoms)
@@ -275,21 +272,14 @@ def generate_pint_atoms_from_string(*,
                                                      verbose=verbose,
                                                      debug=debug,)
 
-    #magnitude = 0.0
-    #pint_atoms = []
     for atom in human_input_atoms:
-        ic(atom)
-
+        #ic(atom)
         pint_atom = convert_atom_to_pint(atom=atom,
                                          ureg=ureg,
                                          verbose=verbose,
                                          debug=debug,)
 
-        ic(pint_atom)
-
-        #magnitude += pint_atom.magnitude
-        #ic(magnitude)
-        #pint_atoms.append(pint_atom)
+        #ic(pint_atom)
         yield pint_atom
 
 
@@ -305,7 +295,6 @@ def convert_pint_atom_to_unit(*,
     assert not to_unit_string[0].isdigit()
 
     if verbose:
-        #ic(fromq)
         ic(to_unit_string)
 
     try:
@@ -341,7 +330,8 @@ def cli(quantity: str,
         to_units: str,
         verbose: bool,
         debug: bool,
-        ipython: bool,):
+        ipython: bool,
+        ):
 
     if verbose:
         ic(quantity, to_units)
@@ -350,38 +340,28 @@ def cli(quantity: str,
 
     atoms = []
     total_magnitude = 'unset'
-    #magnitude_list = []
     for atom in generate_pint_atoms_from_string(human_input=quantity,
                                                 ureg=ureg,
                                                 verbose=verbose,
                                                 debug=debug,):
 
-        #atom_converted = convert_pint_atom_to_unit(pint_atom=atom,
-        #                                           to_unit_string=unit,
-        #                                           ureg=ureg,
-        #                                           verbose=verbose,
-        #                                           debug=debug,)
-
-        ic(atom)
+        #ic(atom)
         atom = atom.to_base_units()
-        print(atom)
+        #print(atom)
         atoms.append(atom)
         atom_decimal = Decimal(atom.magnitude)
-        ic(atom_decimal)
-        #magnitude_list.append(atom_decimal)
+        #ic(atom_decimal)
         if total_magnitude == 'unset':
             total_magnitude = atom_decimal
         else:
             total_magnitude += atom_decimal
 
-    ic(atoms)
-    ic(total_magnitude)
-    #ic(magnitude_list)
+    #ic(atoms)
+    #ic(total_magnitude)
 
     summed_atoms = atoms[0]
     for atom in atoms[1:]:
         summed_atoms += atom
-
 
     for unit in to_units:
         if (verbose or debug):

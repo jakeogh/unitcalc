@@ -63,7 +63,7 @@ def add_unit_to_ureg(ureg, *,
                      unit_aliases: List[str],
                      verbose: bool,
                      debug: bool,):
-    if verbose:
+    if debug:
         ic(unit_name, unit_def, unit_symbol, unit_aliases)
 
     assert unit_name not in unit_aliases
@@ -79,7 +79,7 @@ def add_unit_to_ureg(ureg, *,
     if unit_aliases:
         unit_def_string += '= '.join(unit_aliases)
 
-    if verbose:
+    if debug:
         ic(unit_def_string)
 
     ureg.define(unit_def_string)

@@ -275,7 +275,7 @@ def convert_string_to_pint(*,
                                                      verbose=verbose,
                                                      debug=debug,)
 
-    magnitude = None
+    magnitude = 0.0
     pint_atoms = []
     for atom in human_input_atoms:
         ic(atom)

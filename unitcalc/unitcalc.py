@@ -347,6 +347,7 @@ def cli(quantity: str,
     ureg = construct_unitregistry(verbose=verbose, debug=debug,)
 
     atoms = []
+    total = None
     for atom in generate_pint_atoms_from_string(human_input=quantity,
                                                 ureg=ureg,
                                                 verbose=verbose,
@@ -362,8 +363,14 @@ def cli(quantity: str,
         atom = atom.to_base_units()
         print(atom)
         atoms.append(atom)
+        if not total:
+            total = atom
+        else:
+            total += atom
 
     ic(atoms)
+    ic(total)
+
 
 
     #for unit in to_units:

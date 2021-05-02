@@ -349,6 +349,7 @@ def cli(quantity: str,
 
     atoms = []
     total_magnitude = None
+    magnitude_list = []
     for atom in generate_pint_atoms_from_string(human_input=quantity,
                                                 ureg=ureg,
                                                 verbose=verbose,
@@ -364,6 +365,7 @@ def cli(quantity: str,
         atom = atom.to_base_units()
         print(atom)
         atoms.append(atom)
+        magnitude_list.append(Decimal(atom.magnitude))
         if not total_magnitude:
             total = Decimal(atom.magnitude)
         else:
@@ -371,6 +373,7 @@ def cli(quantity: str,
 
     ic(atoms)
     ic(total)
+    ic(magnitude_list)
 
 
 

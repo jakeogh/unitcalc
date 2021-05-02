@@ -361,7 +361,7 @@ def cli(quantity: str,
 
         if not to_units:
             print(atom.to_base_units())
-            return
+
 
     #for unit in to_units:
     #    fromq_converted = convert_pint_atom_to_unit(fromq_pint=fromq_pint,

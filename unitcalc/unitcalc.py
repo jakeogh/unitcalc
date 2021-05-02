@@ -255,13 +255,13 @@ def split_human_input_on_numbers(*,
     return list_of_human_input_atoms
 
 
-# this stakes a arb string, which could be many atoms, and joins them into one pint atom
-def convert_string_to_pint(*,
-                           human_input: str,
-                           ureg,
-                           verbose: bool,
-                           debug: bool,
-                           ):
+# this takes a arb string, which could be many atoms, and yields pint atoms
+def generate_pint_atoms_from_string(*,
+                                    human_input: str,
+                                    ureg,
+                                    verbose: bool,
+                                    debug: bool,
+                                    ):
 
     human_input = normalize_human_input(human_input=human_input,
                                         verbose=verbose,
@@ -275,8 +275,8 @@ def convert_string_to_pint(*,
                                                      verbose=verbose,
                                                      debug=debug,)
 
-    magnitude = 0.0
-    pint_atoms = []
+    #magnitude = 0.0
+    #pint_atoms = []
     for atom in human_input_atoms:
         ic(atom)
 
@@ -287,18 +287,15 @@ def convert_string_to_pint(*,
 
         ic(pint_atom)
 
-        magnitude += pint_atom.magnitude
-        ic(magnitude)
-        pint_atoms.append(pint_atom)
-
-    ic(pint_atoms)
-    return pint_atoms
-
+        #magnitude += pint_atom.magnitude
+        #ic(magnitude)
+        #pint_atoms.append(pint_atom)
+        yield pint_atom
 
 
 # this is the last step
 def convert_pint_atom_to_unit(*,
-                              fromq_pint,
+                              pint_atom,
                               to_unit_string,
                               ureg,
                               verbose: bool,
@@ -326,7 +323,7 @@ def convert_pint_atom_to_unit(*,
     if verbose:
         ic(to_unit_string_target)
 
-    fromq_converted = fromq_pint.to(to_unit_string_target)
+    fromq_converted = pint_atom.to(to_unit_string_target)
     if verbose:
         ic(fromq_converted)
         ic(fromq_converted.magnitude)
@@ -351,25 +348,31 @@ def cli(quantity: str,
 
     ureg = construct_unitregistry(verbose=verbose, debug=debug,)
 
-    fromq_pint = convert_string_to_pint(human_input=quantity,
-                                        ureg=ureg,
-                                        verbose=verbose,
-                                        debug=debug,)
+    #atoms_magnitude = 0.0
+    for atom in generate_pint_atoms_from_string(human_input=quantity,
+                                                ureg=ureg,
+                                                verbose=verbose,
+                                                debug=debug,):
 
-    ic(type(fromq_pint), fromq_pint)
+        #atom_converted = convert_pint_atom_to_unit(pint_atom=atom,
+        #                                           to_unit_string=unit,
+        #                                           ureg=ureg,
+        #                                           verbose=verbose,
+        #                                           debug=debug,)
+        ic(atom)
 
-    if not to_units:
-        print(fromq_pint.to_base_units())
-        return
+        if not to_units:
+            print(atom.to_base_units())
+            return
 
-    for unit in to_units:
-        fromq_converted = convert_pint_atom_to_unit(fromq_pint=fromq_pint,
-                                                    to_unit_string=unit,
-                                                    ureg=ureg,
-                                                    verbose=verbose,
-                                                    debug=debug,)
+    #for unit in to_units:
+    #    fromq_converted = convert_pint_atom_to_unit(fromq_pint=fromq_pint,
+    #                                                to_unit_string=unit,
+    #                                                ureg=ureg,
+    #                                                verbose=verbose,
+    #                                                debug=debug,)
 
-        print(fromq_converted)
+    #    print(fromq_converted)
 
-    if ipython:
-        import IPython; IPython.embed()
+    #if ipython:
+    #    import IPython; IPython.embed()

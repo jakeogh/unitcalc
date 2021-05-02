@@ -232,6 +232,9 @@ def normalize_human_input(*,
     human_input = human_input.split(' ')
     human_input = ' '.join([i for i in human_input if i])
 
+    if verbose or debug:
+        ic(human_input)
+
     human_input = parse_words_to_numbers(human_input)
 
     if verbose or debug:

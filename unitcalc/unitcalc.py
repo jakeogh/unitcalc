@@ -365,11 +365,13 @@ def cli(quantity: str,
         atom = atom.to_base_units()
         print(atom)
         atoms.append(atom)
-        magnitude_list.append(Decimal(atom.magnitude))
+        atom_decimal = Decimal(atom.magnitude)
+        ic(atom_decimal)
+        magnitude_list.append(atom.decimal)
         if total_magnitude == 'unset':
-            total_magnitude = Decimal(atom.magnitude)
+            total_magnitude = atom_decimal
         else:
-            total_magnitude += Decimal(atom.magnitude)
+            total_magnitude += atom_decimal
 
     ic(atoms)
     ic(total_magnitude)

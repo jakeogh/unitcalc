@@ -250,26 +250,18 @@ def normalize_human_input(*,
 
     words = []
     for word in human_input.split(' '):
-        ic(word)
+        #ic(word)
         converted_word = parse_number(word)
-        ic(converted_word)
+        #ic(converted_word)
         if converted_word:
             words.append(str(converted_word))  # numbers [/d] come back as ints
         else:
             words.append(word)
 
-    ic(words)
+    #ic(words)
     human_input = ' '.join(words)
-    ic(human_input)
+    #ic(human_input)
 
-    #human_input = split_human_input_on_numbers(human_input=human_input,
-    #                                           verbose=verbose,
-    #                                           debug=debug,)
-
-    #for atom in human_input:
-    #    ic(atom)
-
-    #sys.exit(1)
     if verbose or debug:
         ic(human_input)
 

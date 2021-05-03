@@ -232,7 +232,7 @@ def normalize_whitespace(*,
     return string
 
 
-# remove duplicat spaces, convert words to numbers
+# remove duplicate spaces, convert words to numbers
 def normalize_human_input(*,
                           human_input: str,
                           verbose: bool,
@@ -247,6 +247,9 @@ def normalize_human_input(*,
 
     if verbose or debug:
         ic(human_input)
+
+    for word in human_input.split(' '):
+        ic(word)
 
     #human_input = split_human_input_on_numbers(human_input=human_input,
     #                                           verbose=verbose,
@@ -263,6 +266,7 @@ def normalize_human_input(*,
 
 
 #todo, make sure scientific notation and equations work
+# must be after words are converted to numbers
 def split_human_input_on_numbers(*,
                                  human_input: str,
                                  verbose: bool,

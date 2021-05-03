@@ -252,11 +252,13 @@ def normalize_human_input(*,
     for word in human_input.split(' '):
         ic(word)
         converted_word = parse_number(word)
+        ic(converted_word)
         if converted_word:
             words.append(converted_word)
         else:
             words.append(word)
 
+    ic(words)
     human_input = ' '.join(words)
     ic(human_input)
 

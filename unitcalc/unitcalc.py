@@ -248,8 +248,17 @@ def normalize_human_input(*,
     if verbose or debug:
         ic(human_input)
 
+    words = []
     for word in human_input.split(' '):
         ic(word)
+        converted_word = parse_number(word)
+        if converted_word:
+            words.append(converted_word)
+        else:
+            words.append(word)
+
+    human_input = ' '.join(words)
+    ic(human_input)
 
     #human_input = split_human_input_on_numbers(human_input=human_input,
     #                                           verbose=verbose,
@@ -275,7 +284,6 @@ def split_human_input_on_numbers(*,
     if (verbose or debug):
         ic(human_input)
 
-    #list_of_human_input_atoms = re.findall(r'\d+[^\d]+', human_input)
     list_of_human_input_atoms = re.findall(r'[\d\.]+\.?[^\d\.]+', human_input)
     if (verbose or debug):
         ic(list_of_human_input_atoms)
@@ -305,7 +313,6 @@ def generate_pint_atoms_from_string(*,
 
     for atom in human_input_atoms:
         ic(atom)
-        ic(parse_number(atom))
 
         pint_atom = convert_atom_to_pint(atom=atom,
                                          ureg=ureg,

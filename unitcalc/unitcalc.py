@@ -306,8 +306,7 @@ def generate_pint_atoms_from_string(*,
 
 
     for atom in human_input_atoms:
-        ic(atom)
-
+        #ic(atom)
         pint_atom = convert_atom_to_pint(atom=atom,
                                          ureg=ureg,
                                          verbose=verbose,

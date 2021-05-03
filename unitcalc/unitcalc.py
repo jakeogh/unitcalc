@@ -251,10 +251,10 @@ def normalize_human_input(*,
     words = []
     for word in human_input.split(' '):
         ic(word)
-        converted_word = str(parse_number(word))
+        converted_word = parse_number(word)
         ic(converted_word)
         if converted_word:
-            words.append(converted_word)
+            words.append(str(converted_word))  # numbers [/d] come back as ints
         else:
             words.append(word)
 

@@ -220,6 +220,18 @@ def convert_atom_to_pint(*,
     return atom_parsed
 
 
+def normalize_whitespace(*,
+                         string: str,
+                         verbose: bool,
+                         debug: bool,
+                         ):
+
+    # normalize whitespace to single space
+    string = string.split(' ')
+    string = ' '.join([i for i in string if i])
+    return string
+
+
 # remove duplicat spaces, convert words to numbers
 def normalize_human_input(*,
                           human_input: str,
@@ -229,18 +241,21 @@ def normalize_human_input(*,
     if verbose or debug:
         ic(human_input)
 
-    # normalize whitespace to single space
-    human_input = human_input.split(' ')
-    human_input = [i for i in human_input if i]
+    human_input = normalize_whitespace(string=human_input,
+                                       verbose=verbose,
+                                       debug=debug,)
 
     if verbose or debug:
         ic(human_input)
 
-    for atom in human_input:
-        ic(atom)
+    #human_input = split_human_input_on_numbers(human_input=human_input,
+    #                                           verbose=verbose,
+    #                                           debug=debug,)
 
-    #human_input = parse_words_to_numbers(human_input)
-    sys.exit(1)
+    #for atom in human_input:
+    #    ic(atom)
+
+    #sys.exit(1)
     if verbose or debug:
         ic(human_input)
 
@@ -256,7 +271,8 @@ def split_human_input_on_numbers(*,
     if (verbose or debug):
         ic(human_input)
 
-    list_of_human_input_atoms = re.findall(r'\d+[^\d]+', human_input)
+    #list_of_human_input_atoms = re.findall(r'\d+[^\d]+', human_input)
+    list_of_human_input_atoms = re.findall(r'[\d\.]+\.?[^\d\.]+', human_input)
     if (verbose or debug):
         ic(list_of_human_input_atoms)
     return list_of_human_input_atoms
@@ -282,8 +298,11 @@ def generate_pint_atoms_from_string(*,
                                                      verbose=verbose,
                                                      debug=debug,)
 
+
     for atom in human_input_atoms:
-        #ic(atom)
+        ic(atom)
+        ic(parse_number(atom))
+
         pint_atom = convert_atom_to_pint(atom=atom,
                                          ureg=ureg,
                                          verbose=verbose,

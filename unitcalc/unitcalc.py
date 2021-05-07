@@ -353,6 +353,39 @@ def convert_pint_atom_to_unit(*,
     return fromq_converted
 
 
+def combine_human_input_to_single_quantity(quantity, *,
+                                           ureg,
+                                           verbose: bool,
+                                           debug: bool,
+                                           ):
+    atoms = []
+    #total_magnitude = 'unset'
+    for atom in generate_pint_atoms_from_string(human_input=quantity,
+                                                ureg=ureg,
+                                                verbose=verbose,
+                                                debug=debug,):
+
+        #ic(atom)
+        atom = atom.to_base_units()
+        #print(atom)
+        atoms.append(atom)
+        #atom_decimal = Decimal(atom.magnitude)
+        #ic(atom_decimal)
+        #if total_magnitude == 'unset':
+        #    total_magnitude = atom_decimal
+        #else:
+        #    total_magnitude += atom_decimal
+
+    #ic(atoms)
+    #ic(total_magnitude)
+
+    summed_atoms = atoms[0]
+    for atom in atoms[1:]:
+        summed_atoms += atom
+
+    return summed_atoms
+
+
 @click.command()
 @click.argument('quantity', required=True)
 @click.argument('to_units', nargs=-1)
@@ -371,30 +404,10 @@ def cli(quantity: str,
 
     ureg = construct_unitregistry(verbose=verbose, debug=debug,)
 
-    atoms = []
-    total_magnitude = 'unset'
-    for atom in generate_pint_atoms_from_string(human_input=quantity,
-                                                ureg=ureg,
-                                                verbose=verbose,
-                                                debug=debug,):
-
-        #ic(atom)
-        atom = atom.to_base_units()
-        #print(atom)
-        atoms.append(atom)
-        atom_decimal = Decimal(atom.magnitude)
-        #ic(atom_decimal)
-        if total_magnitude == 'unset':
-            total_magnitude = atom_decimal
-        else:
-            total_magnitude += atom_decimal
-
-    #ic(atoms)
-    #ic(total_magnitude)
-
-    summed_atoms = atoms[0]
-    for atom in atoms[1:]:
-        summed_atoms += atom
+    summed_atoms = combine_human_input_to_single_quantity(quantity=quantity,
+                                                          ureg=ureg,
+                                                          verbose=verbose,
+                                                          debug=debug,)
 
     for unit in to_units:
         if (verbose or debug):

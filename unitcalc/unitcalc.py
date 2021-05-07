@@ -306,13 +306,11 @@ def generate_pint_atoms_from_string(*,
 
 
     for atom in human_input_atoms:
-        #ic(atom)
         pint_atom = convert_atom_to_pint(atom=atom,
                                          ureg=ureg,
                                          verbose=verbose,
                                          debug=debug,)
 
-        #ic(pint_atom)
         yield pint_atom
 
 
@@ -354,36 +352,50 @@ def convert_pint_atom_to_unit(*,
 
 
 def combine_human_input_to_single_quantity(quantity, *,
-                                           ureg,
                                            verbose: bool,
                                            debug: bool,
+                                           ureg: object,
                                            ):
     atoms = []
-    #total_magnitude = 'unset'
     for atom in generate_pint_atoms_from_string(human_input=quantity,
                                                 ureg=ureg,
                                                 verbose=verbose,
                                                 debug=debug,):
 
-        #ic(atom)
+        if verbose:
+            ic(atom)
         atom = atom.to_base_units()
-        #print(atom)
         atoms.append(atom)
-        #atom_decimal = Decimal(atom.magnitude)
-        #ic(atom_decimal)
-        #if total_magnitude == 'unset':
-        #    total_magnitude = atom_decimal
-        #else:
-        #    total_magnitude += atom_decimal
-
-    #ic(atoms)
-    #ic(total_magnitude)
 
     summed_atoms = atoms[0]
     for atom in atoms[1:]:
         summed_atoms += atom
 
     return summed_atoms
+
+
+def convert(*,
+            human_input_units: str,
+            human_output_unit: str,
+            verbose: bool,
+            debug: bool,
+            ureg: object = None,
+            ):
+
+    if not ureg:
+        ureg = construct_unitregistry(verbose=verbose, debug=debug,)
+
+    summed_atoms = combine_human_input_to_single_quantity(quantity=human_input_units,
+                                                          ureg=ureg,
+                                                          verbose=verbose,
+                                                          debug=debug,)
+    fromq_converted = convert_pint_atom_to_unit(pint_atom=summed_atoms,
+                                                to_unit_string=human_output_unit,
+                                                ureg=ureg,
+                                                verbose=verbose,
+                                                debug=debug,)
+
+    return fromq_converted
 
 
 @click.command()

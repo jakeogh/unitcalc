@@ -123,6 +123,13 @@ def construct_unitregistry(verbose: bool,
                             debug=debug,)
     #14624 "sutu?" is 527km https://www.youtube.com/watch?v=s_fkpZSnz2I @ 18:45
 
+    ureg = add_unit_to_ureg(ureg,
+                            unit_name='amps',
+                            unit_def='1 * amp',
+                            unit_symbol='_',
+                            unit_aliases=[],
+                            verbose=verbose,
+                            debug=debug,)
     return ureg
 
 

@@ -9,10 +9,16 @@ $ unitcalc 2.2lb
 $ unitcalc 50stones kg
 317.514659 kilogram
 
+# multiple destination units work
 $ unitcalc 50stones kg lb "newton/(ft/s^2)"
 317.514659 kilogram
 700.0000000000001 pound
 96.7784680632 newton * second ** 2 / foot
+
+$ unitcalc 17ells yards meters chains
+21.25 yard
+19.431 meter
+0.9659071590909093 chain  # who knows?
 
 $ unitcalc 1lightyear nm
 9.460730472580798e+24 nanometer

@@ -120,6 +120,7 @@ def construct_unitregistry(verbose: bool,
                             unit_aliases=[],
                             verbose=verbose,
                             debug=debug,)
+    #14624 "sutu?" is 527km https://www.youtube.com/watch?v=s_fkpZSnz2I @ 18:45
 
     return ureg
 

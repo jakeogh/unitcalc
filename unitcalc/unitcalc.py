@@ -64,7 +64,8 @@ def add_unit_to_ureg(ureg, *,
                      unit_symbol: str,
                      unit_aliases: List[str],
                      verbose: bool,
-                     debug: bool,):
+                     debug: bool,
+                     ):
     if debug:
         ic(unit_name, unit_def, unit_symbol, unit_aliases)
 

@@ -132,6 +132,14 @@ def construct_unitregistry(verbose: bool,
     #                        unit_aliases=[],
     #                        verbose=verbose,
     #                        debug=debug,)
+
+    ureg = add_unit_to_ureg(ureg,
+                            unit_name='fiftybmg',   # ~18kJ
+                            unit_def='18050 * joules',
+                            unit_symbol='_',
+                            unit_aliases=[],
+                            verbose=verbose,
+                            debug=debug,)
     return ureg
 
 

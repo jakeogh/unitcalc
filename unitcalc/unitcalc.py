@@ -21,7 +21,9 @@ from decimal import Decimal
 from typing import List
 
 import click
-from enumerate_input import enumerate_input
+from asserttool import eprint
+from asserttool import ic
+#from enumerate_input import enumerate_input
 from Levenshtein import StringMatcher
 #from number_parser import parse as parse_words_to_numbers
 from number_parser import parse_number
@@ -31,17 +33,6 @@ from pint.errors import UndefinedUnitError
 
 class UnitAlreadyDefinedError(ValueError):
     pass
-
-
-def eprint(*args, **kwargs):
-    kwargs.pop('file', None)
-    print(*args, **kwargs, file=sys.stderr)
-
-
-try:
-    from icecream import ic
-except ImportError:
-    ic = eprint
 
 
 def human_filesize_to_int(size,

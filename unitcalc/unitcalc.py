@@ -440,6 +440,9 @@ def cli(quantity: str,
                                                           ureg=ureg,
                                                           verbose=verbose,
                                                           debug=debug,)
+    if not to_units:
+        ic(summed_atoms, summed_atoms.atom.to_base_units())
+        return
 
     for unit in to_units:
         if (verbose or debug):

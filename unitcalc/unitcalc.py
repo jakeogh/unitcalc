@@ -16,9 +16,10 @@
 # pylint: disable=E1101     # no member for base
 # pylint: disable=W0201     # attribute defined outside __init__
 import re
-import sys
+#import sys
 from decimal import Decimal
 from typing import List
+from typing import Optional
 
 import click
 from asserttool import eprint
@@ -35,7 +36,8 @@ class UnitAlreadyDefinedError(ValueError):
     pass
 
 
-def human_filesize_to_int(size,
+def human_filesize_to_int(size: str,
+                          *,
                           verbose: bool = False,
                           debug: bool = False
                           ):
@@ -49,7 +51,8 @@ def human_filesize_to_int(size,
     return int(result)
 
 
-def add_unit_to_ureg(ureg, *,
+def add_unit_to_ureg(*,
+                     ureg: UnitRegistry,
                      unit_name: str,
                      unit_def: str,
                      unit_symbol: str,
@@ -82,20 +85,20 @@ def add_unit_to_ureg(ureg, *,
 
 def construct_unitregistry(verbose: bool,
                            debug: bool,
-                           ):
+                           ) -> UnitRegistry:
     #ureg = UnitRegistry(system='mks', non_int_type=Decimal)
     ureg = UnitRegistry(system='mks')
     ureg.enable_contexts("Gaussian")  # https://github.com/hgrecco/pint/issues/1205
 
     # https://en.wikipedia.org/wiki/Ell
-    ureg = add_unit_to_ureg(ureg,
+    ureg = add_unit_to_ureg(ureg=ureg,
                             unit_name='ell',
                             unit_def='45 * inch',
                             unit_symbol='_',
                             unit_aliases=[],
                             verbose=verbose,
                             debug=debug,)
-    ureg = add_unit_to_ureg(ureg,
+    ureg = add_unit_to_ureg(ureg=ureg,
                             unit_name='scottish_ell',
                             unit_def='37 * inch',
                             unit_symbol='_',
@@ -106,7 +109,7 @@ def construct_unitregistry(verbose: bool,
     # https://en.wikipedia.org/wiki/Ancient_Egyptian_units_of_measurement
     # https://www.youtube.com/watch?v=jyFkBaKARAs
     # pi/6
-    ureg = add_unit_to_ureg(ureg,
+    ureg = add_unit_to_ureg(ureg=ureg,
                             unit_name='royal_cubit',
                             unit_def='52.3 * cm',
                             unit_symbol='_',
@@ -116,7 +119,7 @@ def construct_unitregistry(verbose: bool,
     #14624 "sutu?" is 527km https://www.youtube.com/watch?v=s_fkpZSnz2I @ 18:45
 
     ## unitcalc.unitcalc.UnitAlreadyDefinedError: amps
-    #ureg = add_unit_to_ureg(ureg,
+    #ureg = add_unit_to_ureg(ureg=ureg,
     #                        unit_name='amps',
     #                        unit_def='1 * amp',
     #                        unit_symbol='_',
@@ -124,7 +127,7 @@ def construct_unitregistry(verbose: bool,
     #                        verbose=verbose,
     #                        debug=debug,)
 
-    ureg = add_unit_to_ureg(ureg,
+    ureg = add_unit_to_ureg(ureg=ureg,
                             unit_name='fiftybmg',   # ~18kJ
                             unit_def='18050 * joules',
                             unit_symbol='_',
@@ -143,6 +146,7 @@ def find_unit(*,
               ):
 
     distance = -1
+    ic(type(ulist))
     for unit in ulist:
         dist = StringMatcher.distance(in_unit, unit)
         if distance < 0:
@@ -158,7 +162,7 @@ def find_unit(*,
 
 def convert_atom_to_pint(*,
                          atom,
-                         ureg,
+                         ureg: UnitRegistry,
                          verbose: bool,
                          debug: bool,
                          ):
@@ -331,7 +335,7 @@ def generate_pint_atoms_from_string(*,
 def convert_pint_atom_to_unit(*,
                               pint_atom,
                               to_unit_string: str,
-                              ureg,
+                              ureg: UnitRegistry,
                               verbose: bool,
                               debug: bool,
                               ):
@@ -395,7 +399,7 @@ def convert(*,
             human_output_unit: str,
             verbose: bool,
             debug: bool,
-            ureg: object = None,
+            ureg: Optional[UnitRegistry] = None,
             ):
 
     if not ureg:

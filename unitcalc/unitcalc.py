@@ -288,6 +288,8 @@ def split_human_input_on_numbers(*,
     if (verbose or debug):
         ic(human_input)
 
+    human_input = ''.join(human_input.split(','))   # strip commas
+
     list_of_human_input_atoms = re.findall(r'[\d\.]+\.?[^\d\.]+', human_input)
     if (verbose or debug):
         ic(list_of_human_input_atoms)
@@ -336,7 +338,7 @@ def convert_pint_atom_to_unit(*,
     assert not to_unit_string[0].isdigit()
 
     if verbose:
-        ic(to_unit_string)
+        ic(pint_atom, to_unit_string)
 
     try:
         to_unit_string_target = ureg.parse_units(to_unit_string)
@@ -351,7 +353,10 @@ def convert_pint_atom_to_unit(*,
         to_unit_string_target = ureg.parse_units(found_unit)
 
     if verbose:
-        ic(to_unit_string_target)
+        ic(pint_atom, to_unit_string_target)
+    if '±' in pint_atom:
+        ic(pint_atom)
+
 
     fromq_converted = pint_atom.to(to_unit_string_target)
     if verbose:

@@ -189,12 +189,14 @@ def convert_atom_to_pint(*,
         ic(atom)
 
     if index:
-        magnitude = atom[:index].replace(',', '')
+        magnitude = atom[:index].replace(',', '')  # code duplicated elsewhere
         try:
-            magnitude = float(magnitude)
-        except ValueError:
+            magnitude = Decimal(magnitude)
+        except ValueError as e:
             # should use https://github.com/sopel-irc/sopel/blob/master/sopel/tools/calculation.py
             # or sage
+            if verbose:
+                ic(e)
             expression_pattern = re.compile(r"[0-9/\*e.+\-()]")
             for item in magnitude:
                 assert expression_pattern.match(item)
@@ -203,7 +205,7 @@ def convert_atom_to_pint(*,
                 ic(magnitude)
 
             assert magnitude[0].isdigit()
-            magnitude = float(eval(magnitude))
+            magnitude = Decimal(eval(magnitude))
     else:
         magnitude = atom
 

@@ -131,6 +131,7 @@ def construct_unitregistry(verbose: bool,
                             unit_aliases=[],
                             verbose=verbose,
                             debug=debug,)
+    ic(type(ureg))
     return ureg
 
 
@@ -151,7 +152,7 @@ def find_unit(*,
             if dist < distance:
                 distance = dist
                 winning_unit = unit
-    eprint("Warning: converting {0} to {1}".format(in_unit, winning_unit))
+    eprint('Warning: converting {0} to {1}'.format(in_unit, winning_unit))
     return winning_unit
 
 
@@ -329,7 +330,7 @@ def generate_pint_atoms_from_string(*,
 # this is the last step
 def convert_pint_atom_to_unit(*,
                               pint_atom,
-                              to_unit_string,
+                              to_unit_string: str,
                               ureg,
                               verbose: bool,
                               debug: bool,

@@ -457,6 +457,7 @@ def cli(quantity: str,
                                                     verbose=verbose,
                                                     debug=debug,)
 
+        ic(fromq_converted)
         print(fromq_converted)
 
     if ipython:

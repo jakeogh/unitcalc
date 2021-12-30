@@ -36,6 +36,10 @@ class UnitAlreadyDefinedError(ValueError):
     pass
 
 
+def get_all_unit_names(ureg):
+    all_names = set(dir(ureg))
+
+
 def human_filesize_to_int(size: str,
                           *,
                           verbose: bool = False,
@@ -83,12 +87,15 @@ def add_unit_to_ureg(*,
     return ureg
 
 
-def construct_unitregistry(verbose: bool,
+def construct_unitregistry(*,
+                           system: str,
+                           verbose: bool,
                            debug: bool,
                            ) -> UnitRegistry:
     #ureg = UnitRegistry(system='mks', non_int_type=Decimal)
-    ureg = UnitRegistry(system='mks')
-    ureg.enable_contexts("Gaussian")  # https://github.com/hgrecco/pint/issues/1205
+    #ureg = UnitRegistry(system='mks')
+    ureg = UnitRegistry(system=system)
+    ureg.enable_contexts("Gaussian", "ESU", "sp", "energy", "boltzmann")  # https://github.com/hgrecco/pint/issues/1205
 
     # https://en.wikipedia.org/wiki/Ell
     ureg = add_unit_to_ureg(ureg=ureg,
@@ -406,7 +413,7 @@ def convert(*,
             ):
 
     if not ureg:
-        ureg = construct_unitregistry(verbose=verbose, debug=debug,)
+        ureg = construct_unitregistry(system='mks', verbose=verbose, debug=debug,)
 
     summed_atoms = combine_human_input_to_single_quantity(quantity=human_input_units,
                                                           ureg=ureg,
@@ -437,7 +444,7 @@ def cli(quantity: str,
     if verbose:
         ic(quantity, to_units)
 
-    ureg = construct_unitregistry(verbose=verbose, debug=debug,)
+    ureg = construct_unitregistry(system='mks', verbose=verbose, debug=debug,)
 
     summed_atoms = combine_human_input_to_single_quantity(quantity=quantity,
                                                           ureg=ureg,

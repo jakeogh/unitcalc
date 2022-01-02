@@ -15,8 +15,8 @@
 # pylint: disable=R0903     # too few public methods
 # pylint: disable=E1101     # no member for base
 # pylint: disable=W0201     # attribute defined outside __init__
+
 import re
-#import sys
 from decimal import Decimal
 from typing import List
 from typing import Optional
@@ -24,12 +24,16 @@ from typing import Optional
 import click
 from asserttool import eprint
 from asserttool import ic
-#from enumerate_input import enumerate_input
+
+print('before Levenshtein')
 from Levenshtein import StringMatcher
-#from number_parser import parse as parse_words_to_numbers
+
+print('after Levenshtein')
 from number_parser import parse_number
 from pint import UnitRegistry
 from pint.errors import UndefinedUnitError
+
+print('unitcalc after imports')
 
 
 class UnitAlreadyDefinedError(ValueError):

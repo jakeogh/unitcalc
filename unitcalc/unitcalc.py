@@ -24,20 +24,10 @@ from typing import Optional
 import click
 from asserttool import eprint
 from asserttool import ic
-
-print('before Levenshtein')
 from Levenshtein import StringMatcher
-
-print('after Levenshtein')
 from number_parser import parse_number
-
-print('after number_parser')
-from pint import UnitRegistry
+from pint import UnitRegistry  # slow import
 from pint.errors import UndefinedUnitError
-
-print('after pint')
-
-print('unitcalc after imports')
 
 
 class UnitAlreadyDefinedError(ValueError):

@@ -369,7 +369,7 @@ def convert_pint_atom_to_unit(*,
 
     #if '±' in pint_atom:
     #    ic(pint_atom)
-    ic(dir(pint_atom))
+    #ic(dir(pint_atom))
 
     fromq_converted = pint_atom.to(to_unit_string_target)
     if verbose:

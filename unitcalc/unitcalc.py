@@ -18,12 +18,15 @@
 
 import re
 from decimal import Decimal
+from math import inf
 from typing import List
 from typing import Optional
 
 import click
 from asserttool import eprint
 from asserttool import ic
+from clicktool import click_add_options
+from clicktool import click_global_options
 from Levenshtein import StringMatcher
 from number_parser import parse_number
 from pint import UnitRegistry  # slow import
@@ -40,8 +43,7 @@ def get_all_unit_names(ureg):
 
 def human_filesize_to_int(size: str,
                           *,
-                          verbose: bool = False,
-                          debug: bool = False
+                          verbose: int,
                           ):
     u = UnitRegistry()
     i = u.parse_expression(size)
@@ -59,10 +61,9 @@ def add_unit_to_ureg(*,
                      unit_def: str,
                      unit_symbol: str,
                      unit_aliases: List[str],
-                     verbose: bool,
-                     debug: bool,
+                     verbose: int,
                      ):
-    if debug:
+    if verbose == inf:
         ic(unit_name, unit_def, unit_symbol, unit_aliases)
 
     assert unit_name not in unit_aliases
@@ -78,7 +79,7 @@ def add_unit_to_ureg(*,
     if unit_aliases:
         unit_def_string += '= '.join(unit_aliases)
 
-    if debug:
+    if verbose == inf:
         ic(unit_def_string)
 
     ureg.define(unit_def_string)
@@ -87,8 +88,7 @@ def add_unit_to_ureg(*,
 
 def construct_unitregistry(*,
                            system: str,
-                           verbose: bool,
-                           debug: bool,
+                           verbose: int,
                            ) -> UnitRegistry:
     #ureg = UnitRegistry(system='mks', non_int_type=Decimal)
     #ureg = UnitRegistry(system='mks')
@@ -102,14 +102,14 @@ def construct_unitregistry(*,
                             unit_symbol='_',
                             unit_aliases=[],
                             verbose=verbose,
-                            debug=debug,)
+                            )
     ureg = add_unit_to_ureg(ureg=ureg,
                             unit_name='scottish_ell',
                             unit_def='37 * inch',
                             unit_symbol='_',
                             unit_aliases=[],
                             verbose=verbose,
-                            debug=debug,)
+                            )
 
     # https://en.wikipedia.org/wiki/Ancient_Egyptian_units_of_measurement
     # https://www.youtube.com/watch?v=jyFkBaKARAs
@@ -120,7 +120,7 @@ def construct_unitregistry(*,
                             unit_symbol='_',
                             unit_aliases=[],
                             verbose=verbose,
-                            debug=debug,)
+                            )
     #14624 "sutu?" is 527km https://www.youtube.com/watch?v=s_fkpZSnz2I @ 18:45
 
     ## unitcalc.unitcalc.UnitAlreadyDefinedError: amps
@@ -130,7 +130,7 @@ def construct_unitregistry(*,
     #                        unit_symbol='_',
     #                        unit_aliases=[],
     #                        verbose=verbose,
-    #                        debug=debug,)
+    #                        )
 
     ureg = add_unit_to_ureg(ureg=ureg,
                             unit_name='fiftybmg',   # ~18kJ
@@ -138,7 +138,7 @@ def construct_unitregistry(*,
                             unit_symbol='_',
                             unit_aliases=[],
                             verbose=verbose,
-                            debug=debug,)
+                            )
     ic(type(ureg))
     return ureg
 
@@ -146,8 +146,7 @@ def construct_unitregistry(*,
 def find_unit(*,
               ulist,
               in_unit,
-              verbose: bool,
-              debug: bool,
+              verbose: int,
               ):
 
     distance = -1
@@ -168,11 +167,10 @@ def find_unit(*,
 def convert_atom_to_pint(*,
                          atom,
                          ureg: UnitRegistry,
-                         verbose: bool,
-                         debug: bool,
+                         verbose: int,
                          ):
 
-    if verbose or debug:
+    if verbose:
         ic(atom)
 
     # this might need to be earlier
@@ -228,7 +226,7 @@ def convert_atom_to_pint(*,
         found_unit = find_unit(ulist=dir(ureg),
                                in_unit=unit,
                                verbose=verbose,
-                               debug=debug,)
+                               )
         if verbose:
             ic(found_unit)
         atom_target = ureg.parse_units(found_unit)
@@ -244,8 +242,7 @@ def convert_atom_to_pint(*,
 
 def normalize_whitespace(*,
                          string: str,
-                         verbose: bool,
-                         debug: bool,
+                         verbose: int,
                          ):
 
     # normalize whitespace to single space
@@ -257,17 +254,16 @@ def normalize_whitespace(*,
 # remove duplicate spaces, convert words to numbers
 def normalize_human_input(*,
                           human_input: str,
-                          verbose: bool,
-                          debug: bool,
+                          verbose: int,
                           ):
-    if verbose or debug:
+    if verbose:
         ic(human_input)
 
     human_input = normalize_whitespace(string=human_input,
                                        verbose=verbose,
-                                       debug=debug,)
+                                       )
 
-    if verbose or debug:
+    if verbose:
         ic(human_input)
 
     words = []
@@ -284,7 +280,7 @@ def normalize_human_input(*,
     human_input = ' '.join(words)
     #ic(human_input)
 
-    if verbose or debug:
+    if verbose:
         ic(human_input)
 
     return human_input
@@ -294,16 +290,15 @@ def normalize_human_input(*,
 # must be after words are converted to numbers
 def split_human_input_on_numbers(*,
                                  human_input: str,
-                                 verbose: bool,
-                                 debug: bool,
+                                 verbose: int,
                                  ):
-    if (verbose or debug):
+    if verbose:
         ic(human_input)
 
     human_input = ''.join(human_input.split(','))   # strip commas
 
     list_of_human_input_atoms = re.findall(r'[\d\.]+\.?[^\d\.]+', human_input)
-    if (verbose or debug):
+    if verbose:
         ic(list_of_human_input_atoms)
     return list_of_human_input_atoms
 
@@ -312,28 +307,27 @@ def split_human_input_on_numbers(*,
 def generate_pint_atoms_from_string(*,
                                     human_input: str,
                                     ureg,
-                                    verbose: bool,
-                                    debug: bool,
+                                    verbose: int,
                                     ):
 
     human_input = normalize_human_input(human_input=human_input,
                                         verbose=verbose,
-                                        debug=debug,)
-    if (verbose or debug):
+                                        )
+    if verbose:
         ic(human_input)
 
     # at this point, the string is [number] [space] [unit description] so split on numbers
 
     human_input_atoms = split_human_input_on_numbers(human_input=human_input,
                                                      verbose=verbose,
-                                                     debug=debug,)
+                                                     )
 
 
     for atom in human_input_atoms:
         pint_atom = convert_atom_to_pint(atom=atom,
                                          ureg=ureg,
                                          verbose=verbose,
-                                         debug=debug,)
+                                         )
 
         yield pint_atom
 
@@ -343,8 +337,7 @@ def convert_pint_atom_to_unit(*,
                               pint_atom,
                               to_unit_string: str,
                               ureg: UnitRegistry,
-                              verbose: bool,
-                              debug: bool,
+                              verbose: int,
                               ):
 
     assert not to_unit_string[0].isdigit()
@@ -361,7 +354,7 @@ def convert_pint_atom_to_unit(*,
         found_unit = find_unit(ulist=dir(ureg),
                                in_unit=to_unit_string,
                                verbose=verbose,
-                               debug=debug,)
+                               )
         to_unit_string_target = ureg.parse_units(found_unit)
 
     if verbose:
@@ -380,15 +373,14 @@ def convert_pint_atom_to_unit(*,
 
 
 def combine_human_input_to_single_quantity(quantity, *,
-                                           verbose: bool,
-                                           debug: bool,
+                                           verbose: int,
                                            ureg: object,
                                            ):
     atoms = []
     for atom in generate_pint_atoms_from_string(human_input=quantity,
                                                 ureg=ureg,
                                                 verbose=verbose,
-                                                debug=debug,):
+                                                ):
 
         if verbose:
             ic(atom)
@@ -405,23 +397,22 @@ def combine_human_input_to_single_quantity(quantity, *,
 def convert(*,
             human_input_units: str,
             human_output_unit: str,
-            verbose: bool,
-            debug: bool,
+            verbose: int,
             ureg: Optional[UnitRegistry] = None,
             ):
 
     if not ureg:
-        ureg = construct_unitregistry(system='mks', verbose=verbose, debug=debug,)
+        ureg = construct_unitregistry(system='mks', verbose=verbose,)
 
     summed_atoms = combine_human_input_to_single_quantity(quantity=human_input_units,
                                                           ureg=ureg,
                                                           verbose=verbose,
-                                                          debug=debug,)
+                                                          )
     fromq_converted = convert_pint_atom_to_unit(pint_atom=summed_atoms,
                                                 to_unit_string=human_output_unit,
                                                 ureg=ureg,
                                                 verbose=verbose,
-                                                debug=debug,)
+                                                )
 
     return fromq_converted
 
@@ -429,25 +420,23 @@ def convert(*,
 @click.command()
 @click.argument('quantity', required=True)
 @click.argument('to_units', nargs=-1)
-@click.option('--verbose', is_flag=True)
-@click.option('--debug', is_flag=True)
+@click_add_options(click_global_options)
 @click.option('--ipython', is_flag=True)
 def cli(quantity: str,
         to_units: str,
-        verbose: bool,
-        debug: bool,
+        verbose: int,
+        verbose_inf: bool,
         ipython: bool,
         ):
 
     if verbose:
         ic(quantity, to_units)
 
-    ureg = construct_unitregistry(system='mks', verbose=verbose, debug=debug,)
-
+    ureg = construct_unitregistry(system='mks', verbose=verbose,)
     summed_atoms = combine_human_input_to_single_quantity(quantity=quantity,
                                                           ureg=ureg,
                                                           verbose=verbose,
-                                                          debug=debug,)
+                                                          )
     if not to_units:
         if verbose:
             ic(summed_atoms)
@@ -456,13 +445,13 @@ def cli(quantity: str,
         return
 
     for unit in to_units:
-        if (verbose or debug):
+        if verbose:
             ic(unit)
         fromq_converted = convert_pint_atom_to_unit(pint_atom=summed_atoms,
                                                     to_unit_string=unit,
                                                     ureg=ureg,
                                                     verbose=verbose,
-                                                    debug=debug,)
+                                                    )
 
         ic(fromq_converted)
         print(fromq_converted)

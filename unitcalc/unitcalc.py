@@ -21,12 +21,13 @@ from decimal import Decimal
 from math import inf
 from typing import List
 from typing import Optional
+from typing import Union
 
 import click
-from asserttool import eprint
 from asserttool import ic
 from clicktool import click_add_options
 from clicktool import click_global_options
+from eprint import eprint
 from Levenshtein import StringMatcher
 from number_parser import parse_number
 from pint import UnitRegistry  # slow import
@@ -43,7 +44,7 @@ def get_all_unit_names(ureg):
 
 def human_filesize_to_int(size: str,
                           *,
-                          verbose: int,
+                          verbose: Union[bool, int, float],
                           ):
     u = UnitRegistry()
     i = u.parse_expression(size)
@@ -61,7 +62,7 @@ def add_unit_to_ureg(*,
                      unit_def: str,
                      unit_symbol: str,
                      unit_aliases: List[str],
-                     verbose: int,
+                     verbose: Union[bool, int, float],
                      ):
     if verbose == inf:
         ic(unit_name, unit_def, unit_symbol, unit_aliases)
@@ -88,7 +89,7 @@ def add_unit_to_ureg(*,
 
 def construct_unitregistry(*,
                            system: str,
-                           verbose: int,
+                           verbose: Union[bool, int, float],
                            ) -> UnitRegistry:
     #ureg = UnitRegistry(system='mks', non_int_type=Decimal)
     #ureg = UnitRegistry(system='mks')
@@ -146,7 +147,7 @@ def construct_unitregistry(*,
 def find_unit(*,
               ulist,
               in_unit,
-              verbose: int,
+              verbose: Union[bool, int, float],
               ):
 
     distance = -1
@@ -167,7 +168,7 @@ def find_unit(*,
 def convert_atom_to_pint(*,
                          atom,
                          ureg: UnitRegistry,
-                         verbose: int,
+                         verbose: Union[bool, int, float],
                          ):
 
     if verbose:
@@ -242,7 +243,7 @@ def convert_atom_to_pint(*,
 
 def normalize_whitespace(*,
                          string: str,
-                         verbose: int,
+                         verbose: Union[bool, int, float],
                          ):
 
     # normalize whitespace to single space
@@ -254,7 +255,7 @@ def normalize_whitespace(*,
 # remove duplicate spaces, convert words to numbers
 def normalize_human_input(*,
                           human_input: str,
-                          verbose: int,
+                          verbose: Union[bool, int, float],
                           ):
     if verbose:
         ic(human_input)
@@ -290,7 +291,7 @@ def normalize_human_input(*,
 # must be after words are converted to numbers
 def split_human_input_on_numbers(*,
                                  human_input: str,
-                                 verbose: int,
+                                 verbose: Union[bool, int, float],
                                  ):
     if verbose:
         ic(human_input)
@@ -307,7 +308,7 @@ def split_human_input_on_numbers(*,
 def generate_pint_atoms_from_string(*,
                                     human_input: str,
                                     ureg,
-                                    verbose: int,
+                                    verbose: Union[bool, int, float],
                                     ):
 
     human_input = normalize_human_input(human_input=human_input,
@@ -337,7 +338,7 @@ def convert_pint_atom_to_unit(*,
                               pint_atom,
                               to_unit_string: str,
                               ureg: UnitRegistry,
-                              verbose: int,
+                              verbose: Union[bool, int, float],
                               ):
 
     assert not to_unit_string[0].isdigit()
@@ -373,7 +374,7 @@ def convert_pint_atom_to_unit(*,
 
 
 def combine_human_input_to_single_quantity(quantity, *,
-                                           verbose: int,
+                                           verbose: Union[bool, int, float],
                                            ureg: object,
                                            ):
     atoms = []
@@ -397,7 +398,7 @@ def combine_human_input_to_single_quantity(quantity, *,
 def convert(*,
             human_input_units: str,
             human_output_unit: str,
-            verbose: int,
+            verbose: Union[bool, int, float],
             ureg: Optional[UnitRegistry] = None,
             ):
 
@@ -420,11 +421,11 @@ def convert(*,
 @click.command()
 @click.argument('quantity', required=True)
 @click.argument('to_units', nargs=-1)
-@click_add_options(click_global_options)
 @click.option('--ipython', is_flag=True)
+@click_add_options(click_global_options)
 def cli(quantity: str,
         to_units: str,
-        verbose: int,
+        verbose: Union[bool, int, float],
         verbose_inf: bool,
         ipython: bool,
         ):

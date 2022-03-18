@@ -151,6 +151,14 @@ def construct_unitregistry(
         unit_aliases=[],
         verbose=verbose,
     )
+    ureg = add_unit_to_ureg(
+        ureg=ureg,
+        unit_name="Watts",
+        unit_def="W",
+        unit_symbol="_",
+        unit_aliases=[],
+        verbose=verbose,
+    )
     ic(type(ureg))
     return ureg
 

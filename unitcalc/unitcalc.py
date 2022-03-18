@@ -93,8 +93,8 @@ def add_unit_to_ureg(
 
 def construct_unitregistry(
     *,
-    system: str,
     verbose: Union[bool, int, float],
+    system: str = "mks",
 ) -> UnitRegistry:
     # ureg = UnitRegistry(system='mks', non_int_type=Decimal)
     # ureg = UnitRegistry(system='mks')
@@ -186,8 +186,8 @@ def find_unit(
 
 
 def convert_atom_to_pint(
-    *,
     atom,
+    *,
     ureg: UnitRegistry,
     verbose: Union[bool, int, float],
 ):

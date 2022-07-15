@@ -225,6 +225,8 @@ def convert_atom_to_pint(
                 ic(e)
             expression_pattern = re.compile(r"[0-9/\*e.+\-()]")
             for item in magnitude:
+                if verbose:
+                    ic(item)
                 assert expression_pattern.match(item)
 
             if verbose:

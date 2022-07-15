@@ -18,6 +18,7 @@
 
 import re
 from decimal import Decimal
+from decimal import InvalidOperation
 from math import inf
 from typing import List
 from typing import Optional
@@ -220,7 +221,7 @@ def convert_atom_to_pint(
             ic(magnitude)
         try:
             magnitude = Decimal(magnitude)
-        except ValueError as e:
+        except (ValueError, InvalidOperation) as e:
             # should use https://github.com/sopel-irc/sopel/blob/master/sopel/tools/calculation.py
             # or sage
             if verbose:

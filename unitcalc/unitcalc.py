@@ -93,7 +93,7 @@ def add_unit_to_ureg(
     return ureg
 
 
-def construct_unitregistry(
+def construct_unit_registry(
     *,
     verbose: Union[bool, int, float],
     system: str = "mks",
@@ -445,7 +445,7 @@ def convert(
 ):
 
     if not ureg:
-        ureg = construct_unitregistry(
+        ureg = construct_unit_registry(
             system="mks",
             verbose=verbose,
         )
@@ -491,7 +491,7 @@ def cli(
     if verbose:
         ic(quantity, to_units)
 
-    ureg = construct_unitregistry(
+    ureg = construct_unit_registry(
         system="mks",
         verbose=verbose,
     )

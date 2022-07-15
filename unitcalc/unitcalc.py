@@ -216,6 +216,8 @@ def convert_atom_to_pint(
 
     if index:
         magnitude = atom[:index].replace(",", "")  # code duplicated elsewhere
+        if verbose:
+            ic(magnitude)
         try:
             magnitude = Decimal(magnitude)
         except ValueError as e:

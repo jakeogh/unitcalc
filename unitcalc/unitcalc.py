@@ -225,7 +225,7 @@ def convert_atom_to_pint(
             # or sage
             if verbose:
                 ic(e)
-            expression_pattern = re.compile(r"[0-9/\*e.+\-()]")
+            expression_pattern = re.compile(r"[0-9/\*e.\*+\-()]")
             for item in magnitude:
                 if verbose:
                     ic(item)

@@ -330,7 +330,7 @@ def split_human_input_on_numbers(
     human_input = "".join(human_input.split(","))  # strip commas
     human_input = human_input.replace("**", "^")
 
-    list_of_human_input_atoms = re.findall(r"[\d\.]+\.?[^\d\.]+", human_input)
+    list_of_human_input_atoms = re.findall(r"[\d\.^]+\.?[^\d\.]+", human_input)
     if verbose:
         ic(list_of_human_input_atoms)
     return list_of_human_input_atoms

@@ -27,6 +27,7 @@ import click
 from asserttool import ic
 from clicktool import click_add_options
 from clicktool import click_global_options
+from clicktool import tv
 from eprint import eprint
 from Levenshtein import StringMatcher
 from number_parser import parse_number
@@ -463,7 +464,10 @@ def convert(
 @click.argument("to_units", nargs=-1)
 @click.option("--ipython", is_flag=True)
 @click_add_options(click_global_options)
+@click.pass_context
 def cli(
+    ctx,
+    *,
     quantity: str,
     to_units: str,
     verbose: Union[bool, int, float],
@@ -471,6 +475,12 @@ def cli(
     dict_input: bool,
     ipython: bool,
 ):
+
+    tty, verbose = tv(
+        ctx=ctx,
+        verbose=verbose,
+        verbose_inf=verbose_inf,
+    )
 
     if verbose:
         ic(quantity, to_units)

@@ -99,7 +99,7 @@ def construct_unitregistry(
 ) -> UnitRegistry:
     # ureg = UnitRegistry(system='mks', non_int_type=Decimal)
     # ureg = UnitRegistry(system='mks')
-    ureg = UnitRegistry(system=system)
+    ureg = UnitRegistry(system=system, non_int_type=Decimal)
     ureg.enable_contexts(
         "Gaussian", "ESU", "sp", "energy", "boltzmann"
     )  # https://github.com/hgrecco/pint/issues/1205

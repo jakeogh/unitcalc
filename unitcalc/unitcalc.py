@@ -16,13 +16,12 @@
 # pylint: disable=E1101     # no member for base
 # pylint: disable=W0201     # attribute defined outside __init__
 
+from __future__ import annotations
+
 import re
 from decimal import Decimal
 from decimal import InvalidOperation
 from math import inf
-from typing import List
-from typing import Optional
-from typing import Union
 
 import click
 from asserttool import ic
@@ -47,7 +46,7 @@ def get_all_unit_names(ureg):
 def human_filesize_to_int(
     size: str,
     *,
-    verbose: Union[bool, int, float],
+    verbose: bool | int | float,
 ):
     u = UnitRegistry()
     i = u.parse_expression(size)
@@ -65,8 +64,8 @@ def add_unit_to_ureg(
     unit_name: str,
     unit_def: str,
     unit_symbol: str,
-    unit_aliases: List[str],
-    verbose: Union[bool, int, float],
+    unit_aliases: list[str],
+    verbose: bool | int | float,
 ):
     if verbose == inf:
         ic(unit_name, unit_def, unit_symbol, unit_aliases)
@@ -95,7 +94,7 @@ def add_unit_to_ureg(
 
 def construct_unit_registry(
     *,
-    verbose: Union[bool, int, float],
+    verbose: bool | int | float,
     system: str = "mks",
 ) -> UnitRegistry:
     # ureg = UnitRegistry(system='mks', non_int_type=Decimal)
@@ -169,7 +168,7 @@ def find_unit(
     *,
     ulist,
     in_unit,
-    verbose: Union[bool, int, float],
+    verbose: bool | int | float,
 ):
 
     distance = -1
@@ -191,7 +190,7 @@ def convert_atom_to_pint(
     atom,
     *,
     ureg: UnitRegistry,
-    verbose: Union[bool, int, float],
+    verbose: bool | int | float,
 ):
 
     if verbose:
@@ -272,7 +271,7 @@ def convert_atom_to_pint(
 def normalize_whitespace(
     *,
     string: str,
-    verbose: Union[bool, int, float],
+    verbose: bool | int | float,
 ):
 
     # normalize whitespace to single space
@@ -285,7 +284,7 @@ def normalize_whitespace(
 def normalize_human_input(
     *,
     human_input: str,
-    verbose: Union[bool, int, float],
+    verbose: bool | int | float,
 ):
     if verbose:
         ic(human_input)
@@ -323,7 +322,7 @@ def normalize_human_input(
 def split_human_input_on_numbers(
     *,
     human_input: str,
-    verbose: Union[bool, int, float],
+    verbose: bool | int | float,
 ):
     if verbose:
         ic(human_input)
@@ -342,7 +341,7 @@ def generate_pint_atoms_from_string(
     *,
     human_input: str,
     ureg,
-    verbose: Union[bool, int, float],
+    verbose: bool | int | float,
 ):
 
     human_input = normalize_human_input(
@@ -375,7 +374,7 @@ def convert_pint_atom_to_unit(
     pint_atom,
     to_unit_string: str,
     ureg: UnitRegistry,
-    verbose: Union[bool, int, float],
+    verbose: bool | int | float,
 ):
 
     assert not to_unit_string[0].isdigit()
@@ -414,7 +413,7 @@ def convert_pint_atom_to_unit(
 def combine_human_input_to_single_quantity(
     quantity,
     *,
-    verbose: Union[bool, int, float],
+    verbose: bool | int | float,
     ureg: object,
 ):
     atoms = []
@@ -440,8 +439,8 @@ def convert(
     *,
     human_input_units: str,
     human_output_unit: str,
-    verbose: Union[bool, int, float],
-    ureg: Optional[UnitRegistry] = None,
+    verbose: bool | int | float,
+    ureg: UnitRegistry | None = None,
 ):
 
     if not ureg:
@@ -476,9 +475,9 @@ def cli(
     *,
     quantity: str,
     to_units: str,
-    verbose: Union[bool, int, float],
+    verbose: bool | int | float,
     verbose_inf: bool,
-    dict_input: bool,
+    dict_output: bool,
     ipython: bool,
 ):
 

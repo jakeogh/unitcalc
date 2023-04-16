@@ -1,20 +1,27 @@
 #!/usr/bin/env python3
 # -*- coding: utf8 -*-
 
-# pylint: disable=C0111     # docstrings are always outdated and wrong
-# pylint: disable=W0511     # todo is encouraged
-# pylint: disable=R0902     # too many instance attributes
-# pylint: disable=C0302     # too many lines in module
-# pylint: disable=C0103     # single letter var names
-# pylint: disable=R0911     # too many return statements
-# pylint: disable=R0912     # too many branches
-# pylint: disable=R0915     # too many statements
-# pylint: disable=R0913     # too many arguments
-# pylint: disable=R1702     # too many nested blocks
-# pylint: disable=R0914     # too many local variables
-# pylint: disable=R0903     # too few public methods
-# pylint: disable=E1101     # no member for base
-# pylint: disable=W0201     # attribute defined outside __init__
+# pylint: disable=useless-suppression             # [I0021]
+# pylint: disable=missing-docstring               # [C0111] docstrings are always outdated and wrong
+# pylint: disable=missing-param-doc               # [W9015]
+# pylint: disable=missing-module-docstring        # [C0114]
+# pylint: disable=fixme                           # [W0511] todo encouraged
+# pylint: disable=line-too-long                   # [C0301]
+# pylint: disable=too-many-instance-attributes    # [R0902]
+# pylint: disable=too-many-lines                  # [C0302] too many lines in module
+# pylint: disable=invalid-name                    # [C0103] single letter var names, name too descriptive
+# pylint: disable=too-many-return-statements      # [R0911]
+# pylint: disable=too-many-branches               # [R0912]
+# pylint: disable=too-many-statements             # [R0915]
+# pylint: disable=too-many-arguments              # [R0913]
+# pylint: disable=too-many-nested-blocks          # [R1702]
+# pylint: disable=too-many-locals                 # [R0914]
+# pylint: disable=too-many-public-methods         # [R0904]
+# pylint: disable=too-few-public-methods          # [R0903]
+# pylint: disable=no-member                       # [E1101] no member for base
+# pylint: disable=attribute-defined-outside-init  # [W0201]
+# pylint: disable=too-many-boolean-expressions    # [R0916] in if statement
+
 
 from __future__ import annotations
 
@@ -46,7 +53,7 @@ def get_all_unit_names(ureg):
 def human_filesize_to_int(
     size: str,
     *,
-    verbose: bool | int | float,
+    verbose: bool | int | float = False,
 ):
     u = UnitRegistry()
     i = u.parse_expression(size)
@@ -65,7 +72,7 @@ def add_unit_to_ureg(
     unit_def: str,
     unit_symbol: str,
     unit_aliases: list[str],
-    verbose: bool | int | float,
+    verbose: bool | int | float = False,
 ):
     if verbose == inf:
         ic(unit_name, unit_def, unit_symbol, unit_aliases)
@@ -94,7 +101,7 @@ def add_unit_to_ureg(
 
 def construct_unit_registry(
     *,
-    verbose: bool | int | float,
+    verbose: bool | int | float = False,
     system: str = "mks",
 ) -> UnitRegistry:
     # ureg = UnitRegistry(system='mks', non_int_type=Decimal)
@@ -168,9 +175,8 @@ def find_unit(
     *,
     ulist,
     in_unit,
-    verbose: bool | int | float,
+    verbose: bool | int | float = False,
 ):
-
     distance = -1
     ic(type(ulist))
     for unit in ulist:
@@ -190,9 +196,8 @@ def convert_atom_to_pint(
     atom,
     *,
     ureg: UnitRegistry,
-    verbose: bool | int | float,
+    verbose: bool | int | float = False,
 ):
-
     if verbose:
         ic(atom)
 
@@ -271,9 +276,8 @@ def convert_atom_to_pint(
 def normalize_whitespace(
     *,
     string: str,
-    verbose: bool | int | float,
+    verbose: bool | int | float = False,
 ):
-
     # normalize whitespace to single space
     string = string.split(" ")
     string = " ".join([i for i in string if i])
@@ -284,7 +288,7 @@ def normalize_whitespace(
 def normalize_human_input(
     *,
     human_input: str,
-    verbose: bool | int | float,
+    verbose: bool | int | float = False,
 ):
     if verbose:
         ic(human_input)
@@ -322,7 +326,7 @@ def normalize_human_input(
 def split_human_input_on_numbers(
     *,
     human_input: str,
-    verbose: bool | int | float,
+    verbose: bool | int | float = False,
 ):
     if verbose:
         ic(human_input)
@@ -341,9 +345,8 @@ def generate_pint_atoms_from_string(
     *,
     human_input: str,
     ureg,
-    verbose: bool | int | float,
+    verbose: bool | int | float = False,
 ):
-
     human_input = normalize_human_input(
         human_input=human_input,
         verbose=verbose,
@@ -374,9 +377,8 @@ def convert_pint_atom_to_unit(
     pint_atom,
     to_unit_string: str,
     ureg: UnitRegistry,
-    verbose: bool | int | float,
+    verbose: bool | int | float = False,
 ):
-
     assert not to_unit_string[0].isdigit()
 
     if verbose:
@@ -413,7 +415,7 @@ def convert_pint_atom_to_unit(
 def combine_human_input_to_single_quantity(
     quantity,
     *,
-    verbose: bool | int | float,
+    verbose: bool | int | float = False,
     ureg: object,
 ):
     atoms = []
@@ -422,7 +424,6 @@ def combine_human_input_to_single_quantity(
         ureg=ureg,
         verbose=verbose,
     ):
-
         if verbose:
             ic(atom)
         atom = atom.to_base_units()
@@ -439,10 +440,9 @@ def convert(
     *,
     human_input_units: str,
     human_output_unit: str,
-    verbose: bool | int | float,
+    verbose: bool | int | float = False,
     ureg: UnitRegistry | None = None,
 ):
-
     if not ureg:
         ureg = construct_unit_registry(
             system="mks",
@@ -475,12 +475,11 @@ def cli(
     *,
     quantity: str,
     to_units: str,
-    verbose: bool | int | float,
+    verbose: bool | int | float = False,
     verbose_inf: bool,
     dict_output: bool,
     ipython: bool,
 ):
-
     tty, verbose = tv(
         ctx=ctx,
         verbose=verbose,

@@ -443,6 +443,8 @@ def cli(
         verbose=verbose,
         verbose_inf=verbose_inf,
     )
+    if not verbose:
+        ic.disable()
 
     ic(quantity, to_units)
 

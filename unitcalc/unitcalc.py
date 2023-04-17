@@ -181,14 +181,7 @@ def find_unit(
     return winning_unit
 
 
-def convert_atom_to_pint(
-    atom,
-    *,
-    ureg: UnitRegistry,
-    verbose: bool | int | float = False,
-):
-    ic(atom)
-
+def convert_atom_to_magnitude_and_unit(atom):
     # this might need to be earlier
     if not atom[0].isdigit():
         if atom[0] == ".":
@@ -228,6 +221,19 @@ def convert_atom_to_pint(
         magnitude = atom
 
     unit = atom[index:]
+
+    return magnitude, unit
+
+
+def convert_atom_to_pint(
+    atom,
+    *,
+    ureg: UnitRegistry,
+    verbose: bool | int | float = False,
+):
+    ic(atom)
+
+    magnitude, unit = convert_atom_to_magnitude_and_unit(atom)
 
     ic(magnitude)
     ic(unit)

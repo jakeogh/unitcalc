@@ -343,6 +343,7 @@ def use_unc(num, fmt, prec_unc):
 def _convert(*, ureg, u_from, u_to=None, unc=None, factor=None):
     args_prec = 12
     args_prec_unc = 2
+    ic(u_from, u_to)
     q = ureg.Quantity(u_from)
     fmt = f".{args_prec}g"
     if unc:
@@ -365,7 +366,7 @@ def _convert(*, ureg, u_from, u_to=None, unc=None, factor=None):
     ic(fmt, q, nq.magnitude, nq.units)
     _output = ("{:} = " + fmt).format(q, nq.magnitude, nq.units)
     ic(_output)
-    print(_output)
+    # print(_output)
     return _output
 
 
@@ -418,7 +419,7 @@ def cli(
         )
 
         ic(fromq_converted)
-        print(fromq_converted)
+        # print(fromq_converted)
         _converted = _convert(ureg=ureg, u_from=summed_atoms, u_to=fromq_converted)
         ic(_converted)
 

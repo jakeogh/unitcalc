@@ -57,7 +57,6 @@ def human_filesize_to_int(
     result = i.to("bytes").magnitude
     # result = int(result)
     ic(result)
-    # assert isinstance(result, int)
     return int(result)
 
 
@@ -391,6 +390,7 @@ def cli(
         verbose=verbose,
         verbose_inf=verbose_inf,
     )
+
     if not verbose:
         ic.disable()
 
@@ -408,6 +408,8 @@ def cli(
         ic(summed_atoms)
         ic(summed_atoms.to_base_units())
         print(summed_atoms)
+        _converted = _convert(ureg=ureg, u_from=summed_atoms)
+        ic(_converted)
         return
 
     for unit in to_units:

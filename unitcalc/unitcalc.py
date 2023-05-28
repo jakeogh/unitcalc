@@ -411,9 +411,9 @@ def cli(
     if not to_units:
         ic(summed_atoms)
         ic(summed_atoms.to_base_units())
-        print(summed_atoms)
+        # print(summed_atoms)
         _converted = _convert(ureg=ureg, u_from=summed_atoms, reason=False)
-        ic(_converted)
+        print(_converted)
         return
 
     for unit in to_units:

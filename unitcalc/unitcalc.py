@@ -368,7 +368,7 @@ def cli(
         return
 
     for unit in to_units:
-        ic(unit)
+        ic(summed_atoms, unit)
         fromq_converted = convert_pint_atom_to_unit(
             pint_atom=summed_atoms,
             to_unit_string=unit,

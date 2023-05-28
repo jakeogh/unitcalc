@@ -36,6 +36,7 @@ from clicktool import click_global_options
 from clicktool import tv
 from eprint import eprint
 from Levenshtein import StringMatcher
+from mptool import output
 from number_parser import parse_number
 from pint import UnitRegistry  # slow import
 from pint.errors import UndefinedUnitError
@@ -339,7 +340,7 @@ def use_unc(num, fmt, prec_unc):
 
 
 # from pint_convery.py
-def _convert(*, ureg, u_from, u_to=None, unc=None, factor=None):
+def _convert(*, ureg, u_from, reason: bool, u_to=None, unc=None, factor=None):
     args_prec = 12
     args_prec_unc = 2
     ic(u_from, u_to)
@@ -363,7 +364,10 @@ def _convert(*, ureg, u_from, u_to=None, unc=None, factor=None):
 
     fmt = "{:" + fmt + "} {:~P}"
     ic(fmt, q, nq.magnitude, nq.units)
-    _output = ("{:} = " + fmt).format(q, nq.magnitude, nq.units)
+    if reason:
+        _output = ("{:} = " + fmt).format(q, nq.magnitude, nq.units)
+    else:
+        _output = (fmt).format(nq.magnitude, nq.units)
     ic(_output)
     # print(_output)
     return _output
@@ -408,7 +412,7 @@ def cli(
         ic(summed_atoms)
         ic(summed_atoms.to_base_units())
         print(summed_atoms)
-        _converted = _convert(ureg=ureg, u_from=summed_atoms)
+        _converted = _convert(ureg=ureg, u_from=summed_atoms, reason=False)
         ic(_converted)
         return
 
@@ -422,8 +426,10 @@ def cli(
 
         ic(fromq_converted)
         # print(fromq_converted)
-        _converted = _convert(ureg=ureg, u_from=summed_atoms, u_to=fromq_converted)
-        ic(_converted)
+        _converted = _convert(
+            ureg=ureg, u_from=summed_atoms, u_to=fromq_converted, reason=True
+        )
+        print(_converted)
 
     if ipython:
         import IPython

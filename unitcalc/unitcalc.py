@@ -23,11 +23,13 @@
 # pylint: disable=too-many-boolean-expressions    # [R0916] in if statement
 from __future__ import annotations
 
+import contextlib
 import re
 from decimal import Decimal
 from decimal import InvalidOperation
 
 import click
+import uncertainties
 from asserttool import ic
 from clicktool import click_add_options
 from clicktool import click_global_options
@@ -152,7 +154,6 @@ def convert_atom_to_pint(
     atom_parsed = Q_(magnitude, atom_target)
 
     ic(atom_parsed)
-
     return atom_parsed
 
 
@@ -327,6 +328,47 @@ def convert(
     return fromq_converted
 
 
+def use_unc(num, fmt, prec_unc):
+    unc = 0
+    with contextlib.suppress(Exception):
+        if isinstance(num, uncertainties.UFloat):
+            full = ("{:" + fmt + "}").format(num)
+            unc = re.search(r"\+/-[0.]*([\d.]*)", full).group(1)
+            unc = len(unc.replace(".", ""))
+
+    return max(0, min(prec_unc, unc))
+
+
+# from pint_convery.py
+def _convert(*, ureg, u_from, u_to=None, unc=None, factor=None):
+    args_prec = 12
+    args_prec_unc = 2
+    q = ureg.Quantity(u_from)
+    fmt = f".{args_prec}g"
+    if unc:
+        q = q.plus_minus(unc)
+    if u_to:
+        nq = q.to(u_to)
+    else:
+        nq = q.to_base_units()
+    if factor:
+        q *= ureg.Quantity(factor)
+        nq *= ureg.Quantity(factor).to_base_units()
+    prec_unc = use_unc(nq.magnitude, fmt, args_prec_unc)
+    if prec_unc > 0:
+        fmt = f".{prec_unc}uS"
+    else:
+        with contextlib.suppress(Exception):
+            nq = nq.magnitude.n * nq.units
+
+    fmt = "{:" + fmt + "} {:~P}"
+    ic(fmt, q, nq.magnitude, nq.units)
+    _output = ("{:} = " + fmt).format(q, nq.magnitude, nq.units)
+    ic(_output)
+    print(_output)
+    return _output
+
+
 @click.command()
 @click.argument("quantity", required=True)
 @click.argument("to_units", nargs=-1)
@@ -377,6 +419,8 @@ def cli(
 
         ic(fromq_converted)
         print(fromq_converted)
+        _converted = _convert(ureg=ureg, u_from=summed_atoms, u_to=fromq_converted)
+        ic(_converted)
 
     if ipython:
         import IPython

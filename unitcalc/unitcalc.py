@@ -40,9 +40,6 @@ from pint.errors import UndefinedUnitError
 from unittool import UnitAlreadyDefinedError
 from unittool import construct_unit_registry
 
-# class UnitAlreadyDefinedError(ValueError):
-#    pass
-
 
 def get_all_unit_names(ureg):
     all_names = set(dir(ureg))
@@ -60,104 +57,6 @@ def human_filesize_to_int(
     ic(result)
     # assert isinstance(result, int)
     return int(result)
-
-
-# def add_unit_to_ureg(
-#    *,
-#    ureg: UnitRegistry,
-#    unit_name: str,
-#    unit_def: str,
-#    unit_symbol: str,
-#    unit_aliases: list[str],
-#    verbose: bool | int | float = False,
-# ):
-#    ic(unit_name, unit_def, unit_symbol, unit_aliases)
-#
-#    assert unit_name not in unit_aliases
-#    assert unit_symbol not in unit_aliases
-#
-#    if unit_name in ureg:
-#        raise UnitAlreadyDefinedError(unit_name)
-#
-#    unit_def_string = "{unit_name} = {unit_def} = {unit_symbol} = "
-#    unit_def_string = unit_def_string.format(
-#        unit_name=unit_name,
-#        unit_def=unit_def,
-#        unit_symbol=unit_symbol,
-#    )
-#    if unit_aliases:
-#        unit_def_string += "= ".join(unit_aliases)
-#
-#    ic(unit_def_string)
-#
-#    ureg.define(unit_def_string)
-#    return ureg
-#
-#
-# def construct_unit_registry(
-#    *,
-#    system: str = "mks",
-#    verbose: bool | int | float = False,
-# ) -> UnitRegistry:
-#    # ureg = UnitRegistry(system='mks', non_int_type=Decimal)
-#    # ureg = UnitRegistry(system='mks')
-#    ureg = UnitRegistry(system=system, non_int_type=Decimal)
-#    ureg.enable_contexts(
-#        "Gaussian", "ESU", "sp", "energy", "boltzmann"
-#    )  # https://github.com/hgrecco/pint/issues/1205
-#
-#    # https://en.wikipedia.org/wiki/Ell
-#    ureg = add_unit_to_ureg(
-#        ureg=ureg,
-#        unit_name="ell",
-#        unit_def="45 * inch",
-#        unit_symbol="_",
-#        unit_aliases=[],
-#    )
-#    ureg = add_unit_to_ureg(
-#        ureg=ureg,
-#        unit_name="scottish_ell",
-#        unit_def="37 * inch",
-#        unit_symbol="_",
-#        unit_aliases=[],
-#    )
-#
-#    # https://en.wikipedia.org/wiki/Ancient_Egyptian_units_of_measurement
-#    # https://www.youtube.com/watch?v=jyFkBaKARAs
-#    # pi/6
-#    ureg = add_unit_to_ureg(
-#        ureg=ureg,
-#        unit_name="royal_cubit",
-#        unit_def="52.3 * cm",
-#        unit_symbol="_",
-#        unit_aliases=[],
-#    )
-#    # 14624 "sutu?" is 527km https://www.youtube.com/watch?v=s_fkpZSnz2I @ 18:45
-#
-#    ## unitcalc.unitcalc.UnitAlreadyDefinedError: amps
-#    # ureg = add_unit_to_ureg(ureg=ureg,
-#    #                        unit_name='amps',
-#    #                        unit_def='1 * amp',
-#    #                        unit_symbol='_',
-#    #                        unit_aliases=[],
-#    #                        )
-#
-#    ureg = add_unit_to_ureg(
-#        ureg=ureg,
-#        unit_name="fiftybmg",  # ~18kJ
-#        unit_def="18050 * joules",
-#        unit_symbol="_",
-#        unit_aliases=[],
-#    )
-#    ureg = add_unit_to_ureg(
-#        ureg=ureg,
-#        unit_name="Watts",
-#        unit_def="W",
-#        unit_symbol="_",
-#        unit_aliases=[],
-#    )
-#    ic(type(ureg))
-#    return ureg
 
 
 def find_unit(

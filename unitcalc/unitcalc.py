@@ -461,6 +461,7 @@ def cli(
         quantity=quantity,
         ureg=ureg,
     )
+
     if not to_units:
         ic(summed_atoms)
         ic(summed_atoms.to_base_units())

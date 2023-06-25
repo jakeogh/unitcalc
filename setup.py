@@ -26,7 +26,7 @@ setup(
     install_requires=dependencies,
     entry_points={
         "console_scripts": [
-            "unitcalc = unitcalc.unitcalc:cli",
+            "unitcalc = unitcalc.cli:cli",
         ],
     },
     classifiers=[

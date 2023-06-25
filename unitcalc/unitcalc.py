@@ -28,15 +28,10 @@ import re
 from decimal import Decimal
 from decimal import InvalidOperation
 
-import click
 import uncertainties
 from asserttool import ic
-from clicktool import click_add_options
-from clicktool import click_global_options
-from clicktool import tv
 from eprint import eprint
 from Levenshtein import StringMatcher
-from mptool import output
 from number_parser import parse_number
 from pint import UnitRegistry  # slow import
 from pint.errors import UndefinedUnitError
@@ -373,66 +368,3 @@ def _convert(*, ureg, u_from, reason: bool, u_to=None, unc=None, factor=None):
     # print(_output)
     return _output
 
-
-@click.command()
-@click.argument("quantity", required=True)
-@click.argument("to_units", nargs=-1)
-@click.option("--ipython", is_flag=True)
-@click_add_options(click_global_options)
-@click.pass_context
-def cli(
-    ctx,
-    *,
-    quantity: str,
-    to_units: str,
-    verbose_inf: bool,
-    dict_output: bool,
-    ipython: bool,
-    verbose: bool | int | float = False,
-):
-    tty, verbose = tv(
-        ctx=ctx,
-        verbose=verbose,
-        verbose_inf=verbose_inf,
-    )
-
-    if not verbose:
-        ic.disable()
-
-    ic(quantity, to_units)
-
-    ureg = construct_unit_registry(
-        system="mks",
-    )
-    summed_atoms = combine_human_input_to_single_quantity(
-        quantity=quantity,
-        ureg=ureg,
-    )
-
-    if not to_units:
-        ic(summed_atoms)
-        ic(summed_atoms.to_base_units())
-        # print(summed_atoms)
-        _converted = _convert(ureg=ureg, u_from=summed_atoms, reason=False)
-        print(_converted)
-        return
-
-    for unit in to_units:
-        ic(summed_atoms, unit)
-        fromq_converted = convert_pint_atom_to_unit(
-            pint_atom=summed_atoms,
-            to_unit_string=unit,
-            ureg=ureg,
-        )
-
-        ic(fromq_converted)
-        # print(fromq_converted)
-        _converted = _convert(
-            ureg=ureg, u_from=summed_atoms, u_to=fromq_converted, reason=True
-        )
-        print(_converted)
-
-    if ipython:
-        import IPython
-
-        IPython.embed()
